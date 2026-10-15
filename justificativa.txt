@@ -98,3 +98,46 @@ No geral, tentamos fazer as mudanças da Tarefa 3 sem desmontar o que já estava
 versões anteriores. A ideia foi continuar evoluindo a mesma fábrica aos poucos, incorporando os
 novos conceitos da disciplina, mas mantendo a estrutura e a identidade que já tínhamos criado para
 a ScentWare.
+
+
+EVOLUÇÃO DA SCENTWARE NA TAREFA 4
+Na quarta tarefa, a ScentWare continua com a mesma fábrica e os mesmos cosméticos. A mudança
+principal foi organizar a construção do projeto com Gradle, documentar o código e tratar melhor
+as situações em que uma operação não pode ser feita.
+Os fontes passaram para src/main/java e a execução oficial usa o Gradle Wrapper 8.14.3, com
+Java 17 e verificação do checksum da distribuição. Assim, não é preciso instalar o Gradle
+separadamente. A primeira execução baixa a distribuição, e os comandos build, run e javadoc
+ficam disponíveis no próprio projeto. Não foram adicionadas dependências externas nem um
+framework de testes; a verificação segue o roteiro mínimo combinado no plano.
+O Javadoc explica as classes e fica antes de cada método e construtor, com parâmetros, retorno
+e exceções quando se aplicam. Os comentários continuam em português, usando explicações simples
+pras decisões menos óbvias. O padrão Strategy da Tarefa 3 foi preservado e documentado: o
+gerenciador trabalha com a interface comum e pode trocar a regra de escolha durante a execução.
+Pra diferenciar os erros de negócio, foram criadas PlantaException, DemandaInvalidaException
+e RecursoInsuficienteException. Argumentos fora da faixa também são rejeitados no domínio,
+mesmo quando a chamada não vem do menu. Isso inclui referências ausentes, valores não finitos,
+quantidades negativas e probabilidades fora do intervalo permitido.
+As transições de demanda agora rejeitam estados incompatíveis, em vez de ignorar a tentativa.
+Qtd zero continua permitida numa demanda pendente, mas não pode iniciar produção. Uma demanda
+concluída ou cancelada não é reaberta por atualização. Ao concluir, a qtd e o custo pendentes
+são zerados; depois de rejeições, o gerenciador mantém só os faltantes e recalcula sua estimativa.
+O cancelamento por falta de matéria-prima ou budget foi mantido como regra da versão anterior.
+A diferença é que todos esses recursos são conferidos antes de iniciar a produção, consumir
+estoque, debitar orçamento ou criar o lote. Uma compra recusada também mantém os saldos anteriores.
+As máquinas precisam ser configuradas antes do cadastro das demandas, porque o custo estimado
+depende dessa linha. Depois do cadastro, a configuração fica protegida contra mudanças.
+A rejeição de um produto continua sendo resultado normal da simulação. Nesse caso, os recursos
+da tentativa foram utilizados de verdade, e os itens que não passaram pela inspeção voltam como
+pendentes. Os sorteios, o desgaste e o reparo automático foram mantidos. As etapas usam finally
+pra desligar as máquinas mesmo se ocorrer um erro durante o processamento.
+O Main comunica os erros recuperáveis e permite seguir no menu, sem mostrar sucesso quando a
+operação falhou. Os diagramas em Mermaid mostram as classes e o fluxo dos dados em memória;
+o projeto continua sem banco de dados ou persistência.
+Nesta etapa, a implementação, a documentação e as verificações tiveram assistência de IA,
+inclusive nas atividades inicialmente atribuídas a pessoas no plano, conforme autorização
+posterior de redistribuição. O texto anterior e a autoria da base foram preservados. Não se
+atribui às autoras a execução manual de alterações ou verificações feitas pela IA. A revisão,
+a compreensão das decisões e a submissão acadêmica continuam precisando refletir o trabalho real.
+Os resultados efetivamente obtidos ficam registrados em Docs/VerificacaoTarefa4.md. A preparação
+da release tarefa4-230559-176643 e os dados de entrega ficam em Docs/EntregaTarefa4.md; preparar
+esses arquivos não significa que a release foi publicada ou que o formulário foi enviado.
