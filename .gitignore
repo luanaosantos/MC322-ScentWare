@@ -1,4 +1,6 @@
 bin/
+.gradle/
+build/
 *.class
 .vscode/
 Thumbs.db
