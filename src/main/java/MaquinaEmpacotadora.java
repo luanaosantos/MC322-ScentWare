@@ -1,19 +1,22 @@
+// Etapa de embalagem dos produtos.
+
 /**
- * Embala a unidade e acumula riscos pra inspeção final.
+ * Embala o produto e pode aumentar o risco na inspecao.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class MaquinaEmpacotadora extends Maquina {
     /**
-     * Configura a etapa com os valores do cenário.
-     * @param nome nome da máquina
+     * Cria a empacotadora com os valores do cenario.
+     *
+     * @param nome nome da maquina
      * @param capacidadeMaxima capacidade finita e positiva
-     * @param probabilidadeFalha chance básica entre zero e um
-     * @param custoOperacao custo finito e não negativo de cada uso
-     * @param health saúde entre zero e cem
-     * @param maximoDesgaste desgaste máximo finito e não negativo
-     * @throws IllegalArgumentException se os dados forem inválidos, conforme a classe Maquina
+     * @param probabilidadeFalha chance basica entre zero e um
+     * @param custoOperacao custo finito e nao negativo de cada uso
+     * @param health saude entre zero e cem
+     * @param maximoDesgaste desgaste maximo finito e nao negativo
+     * @throws IllegalArgumentException se os dados forem invalidos, conforme a classe Maquina
      */
     public MaquinaEmpacotadora(
             String nome,
@@ -27,8 +30,9 @@ public class MaquinaEmpacotadora extends Maquina {
     }
 
     /**
-     * Executa a etapa e leva eventuais riscos até a inspeção.
-     * @param produto unidade não nula a processar
+     * Embala o produto e soma risco se a maquina falhar.
+     *
+     * @param produto unidade nao nula a processar
      * @return true depois da etapa
      * @throws IllegalArgumentException se o produto estiver ausente
      */
@@ -39,20 +43,21 @@ public class MaquinaEmpacotadora extends Maquina {
         }
         ligar();
         try {
-            // Assim como no homogeneizador, uma falha aqui aumenta o risco avaliado na inspeção.
+            // Falha na embalagem tb aumenta o risco na inspecao.
             if (verificarFalha()) {
                 produto.aumentarProbabilidadeFalha(getProbabilidadeFalha());
             }
             desgasteAleatorio();
             return true;
         } finally {
-            // Mesmo se a etapa der erro, não deixamos a máquina ligada.
+            // Desliga mesmo se der erro.
             desligar();
         }
     }
 
     /**
-     * Identifica esta etapa da linha.
+     * Retorna o tipo da maquina.
+     *
      * @return tipo Empacotadora
      */
     @Override

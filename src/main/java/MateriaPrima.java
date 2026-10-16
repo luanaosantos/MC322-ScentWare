@@ -1,5 +1,7 @@
+// Estoque e custo da materia-prima.
+
 /**
- * Controla o estoque e o custo unitário da matéria-prima da fábrica.
+ * Guarda a qtd em estoque e o custo por unidade.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
@@ -12,14 +14,14 @@ public class MateriaPrima {
     private double custoPorUnidade;
 
     /**
-     * Cadastra uma matéria-prima com estoque inicial, inclusive zero.
+     * Cadastra o material com estoque inicial, q pode ser zero.
      *
-     * @param id identificação do material
+     * @param id id do material
      * @param nome nome pra consulta
      * @param quantidade qtd inicial no estoque
      * @param unidade unidade usada nas compras e no consumo
      * @param custoPorUnidade custo de cada unidade
-     * @throws IllegalArgumentException se faltar identificação ou os valores forem inválidos
+     * @throws IllegalArgumentException se faltar id ou os valores forem invalidos
      */
     public MateriaPrima(
             String id,
@@ -44,11 +46,11 @@ public class MateriaPrima {
     }
 
     /**
-     * Retira material só depois de conferir toda a qtd pedida.
+     * Retira a qtd pedida se houver estoque.
      *
      * @param quantidade qtd positiva pra consumir
-     * @return true após a retirada
-     * @throws IllegalArgumentException se a qtd não for finita e positiva
+     * @return true apos a retirada
+     * @throws IllegalArgumentException se a qtd nao for finita e positiva
      * @throws RecursoInsuficienteException se faltar material no estoque
      */
     public boolean consumir(double quantidade) {
@@ -60,10 +62,10 @@ public class MateriaPrima {
     }
 
     /**
-     * Soma uma entrada ao estoque sem deixar o total ultrapassar o limite.
+     * Soma a entrada depois de conferir a qtd e o total.
      *
      * @param quantidade qtd finita e positiva da entrada
-     * @throws IllegalArgumentException se a entrada ou o total forem inválidos
+     * @throws IllegalArgumentException se a entrada ou o total forem invalidos
      */
     public void adicionarEstoque(double quantidade) {
         double novoEstoque = this.quantidade + quantidade;
@@ -74,11 +76,11 @@ public class MateriaPrima {
     }
 
     /**
-     * Consulta se o estoque cobre uma retirada sem alterar nada.
+     * Confere se o estoque tem a qtd pedida.
      *
      * @param quantidade qtd finita e positiva procurada
      * @return true se houver material suficiente
-     * @throws IllegalArgumentException se a qtd for inválida
+     * @throws IllegalArgumentException se a qtd for invalida
      */
     public boolean verificarDisponibilidade(double quantidade) {
         if (!Double.isFinite(quantidade) || quantidade <= 0) {
@@ -88,23 +90,26 @@ public class MateriaPrima {
     }
 
     /**
-     * Consulta a identificação do material.
-     * @return id cadastrado
+     * Retorna o id.
+     *
+     * @return id guardado
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Consulta o nome do material.
-     * @return nome cadastrado
+     * Retorna o nome.
+     *
+     * @return nome guardado
      */
     public String getNome() {
         return nome;
     }
 
     /**
-     * Consulta o saldo disponível.
+     * Retorna a qtd em estoque.
+     *
      * @return qtd em estoque
      */
     public double getQuantidade() {
@@ -112,15 +117,17 @@ public class MateriaPrima {
     }
 
     /**
-     * Consulta a unidade usada no estoque.
-     * @return unidade cadastrada
+     * Retorna a unidade usada no estoque.
+     *
+     * @return unidade guardada
      */
     public String getUnidade() {
         return unidade;
     }
 
     /**
-     * Consulta o preço de compra de cada unidade.
+     * Retorna o custo por unidade.
+     *
      * @return custo por unidade
      */
     public double getCustoPorUnidade() {

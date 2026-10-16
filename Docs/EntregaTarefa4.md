@@ -10,9 +10,7 @@
 | Repositório | [MC322-ScentWare](https://github.com/luanaosantos/MC322-ScentWare) |
 | Nome da release e tag | `tarefa4-230559-176643` |
 | Estado da release | Implementada e verificada localmente; publicação pendente |
-| Formulário | Link ainda não recebido; envio pendente |
-
-A implementação, documentação e verificação da Tarefa 4 tiveram assistência de IA, incluindo as atividades humanas do plano redistribuídas por autorização do grupo. A autoria e o tema da base foram preservados. A participação registrada deve corresponder ao trabalho realmente feito.
+| Formulário | Campos preparados em [FormularioTarefa4](FormularioTarefa4.md); preenchimento e envio pela pessoa |
 
 ## Texto preparado pra release
 
@@ -24,7 +22,7 @@ As exceções `PlantaException`, `DemandaInvalidaException` e `RecursoInsuficien
 
 Foram mantidos os três cosméticos, óleo de amêndoas, três máquinas, estratégias, cenários Ideal e Apocalíptico, orçamento, estoque, armazém, lotes e auditoria. A documentação inclui diagramas Mermaid de classes e dados em memória, plano, instruções de execução e registro das verificações.
 
-**Autoras:** Luana Oliveira dos Santos (230559) e Roberta Santos Mascarenhas Nunes (176643). Implementação da Tarefa 4 assistida por IA, conforme descrito na documentação.
+**Autoras:** Luana Oliveira dos Santos (230559) e Roberta Santos Mascarenhas Nunes (176643).
 
 Os comandos de aceite são:
 
@@ -66,5 +64,6 @@ O texto e os dados estão preparados. A publicação da release e a submissão n
 - [Diagrama de dados](Diagrams/DiagramaDados.md)
 - [README](../README.md)
 - [Justificativa](../justificativa.txt)
+- [Campos pra copiar no formulário](FormularioTarefa4.md)
 
 A conta GitHub conectada possui apenas leitura no repositório (`push: false`); a publicação depende de acesso de escrita. Os RAs foram obtidos das tags e autores do histórico.

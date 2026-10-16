@@ -1,26 +1,34 @@
+// Configuracao do Gradle pra compilar, rodar e gerar o Javadoc.
+
+// Ativa as tarefas da aplicacao Java.
 plugins {
     id 'application'
 }
 
+// Usa Java 17.
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// O programa comeca no Main.
 application {
     mainClass = 'Main'
 }
 
+// Compila em UTF-8 pra Java 17.
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 17
 }
 
+// Passa a entrada do terminal pro programa.
 tasks.named('run', JavaExec) {
-    // O Scanner precisa receber oq foi digitado no terminal.
+    // O Scanner le oq foi digitado.
     standardInput = System.in
 }
 
+// Gera o Javadoc em UTF-8 com os autores.
 tasks.named('javadoc', Javadoc) {
     options.encoding = 'UTF-8'
     options.charSet = 'UTF-8'

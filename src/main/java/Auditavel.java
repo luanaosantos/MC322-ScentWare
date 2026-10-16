@@ -1,21 +1,23 @@
+// Contrato pra auditoria de produtos e maquinas.
+
 /**
- * Junta o que máquinas e produtos precisam informar na auditoria da fábrica.
+ * Define oq o item precisa mostrar na auditoria.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public interface Auditavel {
     /**
-     * Monta um resumo do estado atual do item pra consulta no menu.
+     * Monta o relatorio do item pra auditoria.
      *
-     * @return relatório de diagnóstico do item
+     * @return relatorio de diagnostico do item
      */
     String gerarRelatorioDiagnostico();
 
     /**
-     * Confere se o item precisa de atenção pelas regras do seu tipo.
+     * Confere se o item precisa de atencao.
      *
-     * @return {@code true} se houver necessidade de manutenção ou atenção
+     * @return {@code true} se o item precisar de atencao
      */
     boolean precisaManutencao();
 }

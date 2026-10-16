@@ -1,9 +1,9 @@
+// Controle da producao, dos recursos e das demandas.
+
 import java.util.ArrayList;
 
 /**
- * Organiza demandas, recursos e lotes da ScentWare.
- * Usa Strategy pra escolher a próxima demanda sem prender a fábrica a uma regra só.
- * Erros de recurso são conferidos antes do lote; o menu cuida de avisar quem usa.
+ * Controla a fabrica. Usa Strategy pra escolher a demanda e confere os recursos antes do lote.
  *
  * @author Luana Oliveira e Roberta Santos
  */
@@ -19,14 +19,14 @@ public class GerenciadorProducao {
     private int proximoLote;
 
     /**
-     * Monta a fábrica com seus modelos e a estratégia inicial.
+     * Cria a fabrica com estoque, budget, modelos e regra inicial.
      *
-     * @param materiaPrima estoque usado na produção
-     * @param budget orçamento inicial, finito e não negativo
-     * @param produtosModelos modelos dos cosméticos disponíveis
+     * @param materiaPrima estoque usado na producao
+     * @param budget budget inicial, finito e nao negativo
+     * @param produtosModelos modelos dos produtos disponiveis
      * @param estrategiaAtual regra inicial pra escolher demandas
-     * @param riscoInicialProduto risco do cenário entre zero e um
-     * @throws IllegalArgumentException se os dados iniciais forem inválidos
+     * @param riscoInicialProduto risco do cenario entre zero e um
+     * @throws IllegalArgumentException se os dados iniciais forem invalidos
      */
     public GerenciadorProducao(
             MateriaPrima materiaPrima,
@@ -60,10 +60,10 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Troca a regra de seleção durante a execução, mantendo o padrão Strategy.
+     * Troca a regra de escolha da demanda usando Strategy.
      *
      * @param novaEstrategia regra que passa a escolher as demandas
-     * @throws IllegalArgumentException se a estratégia for nula
+     * @throws IllegalArgumentException se a estrategia for nula
      */
     public void setEstrategia(EstrategiaProducao novaEstrategia) {
         if (novaEstrategia == null) {
@@ -73,14 +73,13 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Delega a escolha à estratégia e fabrica a demanda selecionada.
-     * Se não houver uma elegível, só informa que não há trabalho na fila.
+     * Escolhe e fabrica a proxima demanda. Se nao houver nenhuma, avisa no menu.
      *
-     * @throws DemandaInvalidaException se o modelo da demanda não existir
-     * @throws RecursoInsuficienteException se faltar recurso pra produção
+     * @throws DemandaInvalidaException se o modelo da demanda nao existir
+     * @throws RecursoInsuficienteException se faltar recurso pra producao
      */
     public void executarProximaProducao() {
-        // A escolha da próxima demanda fica por conta da estratégia ativa no momento
+        // A regra atual escolhe a proxima demanda.
         Demanda proximaProducao = estrategiaAtual.selecionarDemanda(demandas, budget);
 
         if (proximaProducao == null) {
@@ -97,11 +96,11 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Coloca uma demanda pendente na fila e calcula seu custo na linha atual.
+     * Coloca a demanda na fila e calcula seu custo.
      *
-     * @param demanda demanda ainda não registrada
-     * @throws DemandaInvalidaException se a demanda não puder entrar na fila
-     * @throws IllegalArgumentException se o custo calculado não for finito
+     * @param demanda demanda ainda nao registrada
+     * @throws DemandaInvalidaException se a demanda nao puder entrar na fila
+     * @throws IllegalArgumentException se o custo calculado nao for finito
      */
     public void registrarDemanda(Demanda demanda) {
         if (demanda == null || demandas.contains(demanda)
@@ -114,11 +113,11 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Adiciona uma máquina à linha da fábrica.
+     * Adiciona a maquina antes do cadastro das demandas.
      *
-     * @param maquina máquina que vai participar dos próximos lotes
-     * @throws IllegalArgumentException se a máquina for nula ou já estiver na linha
-     * @throws PlantaException se já houver demandas com custo calculado pra essa linha
+     * @param maquina maquina que vai participar dos proximos lotes
+     * @throws IllegalArgumentException se a maquina for nula ou ja estiver na linha
+     * @throws PlantaException se ja houver demandas com custo calculado pra essa linha
      */
     public void adicionarMaquina(Maquina maquina) {
         if (maquina == null || maquinas.contains(maquina)) {
@@ -131,10 +130,10 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Procura a primeira demanda pendente do tipo, incluindo qtd zero.
+     * Busca a primeira demanda pendente desse tipo, mesmo com qtd zero.
      *
      * @param tipoProduto tipo procurado na fila
-     * @return demanda encontrada, ou null se ainda não houver uma pendente
+     * @return demanda encontrada, ou null se ainda nao houver uma pendente
      * @throws IllegalArgumentException se o tipo for nulo
      */
     public Demanda buscarDemandaPendente(TipoProduto tipoProduto) {
@@ -150,13 +149,13 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Atualiza qtd e custo de uma demanda pendente sem criar outra escondido.
+     * Atualiza qtd e custo. Se nao houver demanda pendente, retorna false.
      *
      * @param tipoProduto tipo da demanda procurada
      * @param quantidade nova qtd, podendo ser zero
-     * @return true se atualizou, ou false se não há uma demanda pendente desse tipo
+     * @return true se atualizou, ou false se nao ha uma demanda pendente desse tipo
      * @throws DemandaInvalidaException se a qtd for negativa
-     * @throws IllegalArgumentException se o tipo ou o custo forem inválidos
+     * @throws IllegalArgumentException se o tipo ou o custo forem invalidos
      */
     public boolean atualizarDemanda(TipoProduto tipoProduto, int quantidade) {
         if (quantidade < 0) {
@@ -174,12 +173,12 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Compra matéria-prima depois de conferir qtd, custo, estoque final e budget.
+     * Confere a qtd e o budget antes de comprar materia-prima.
      *
      * @param quantidade qtd positiva que vai entrar no estoque
-     * @return true quando a compra foi concluída
-     * @throws IllegalArgumentException se a qtd ou os totais não forem válidos
-     * @throws RecursoInsuficienteException se o budget não cobrir a compra
+     * @return true quando a compra foi concluida
+     * @throws IllegalArgumentException se a qtd ou os totais nao forem validos
+     * @throws RecursoInsuficienteException se o budget nao cobrir a compra
      */
     public boolean comprarMateriaPrima(double quantidade) {
         if (!Double.isFinite(quantidade) || quantidade <= 0) {
@@ -197,23 +196,21 @@ public class GerenciadorProducao {
                     + "Estoque e orçamento não foram alterados.", custo, budget));
         }
 
-        // Adicionar já foi validado; só debitamos depois que o estoque recebeu a qtd.
+        // So desconta o custo depois de adicionar o material.
         materiaPrima.adicionarEstoque(quantidade);
         budget -= custo;
         return true;
     }
 
     /**
-     * Fabrica um lote depois de validar todos os recursos e o estado da demanda.
-     * Falta de recurso cancela a demanda, como na Tarefa 3, sem iniciar um lote.
-     * Rejeição na inspeção é normal: o recurso é usado e só os faltantes voltam à fila.
+     * Confere tudo antes de iniciar o lote. Falta de recurso cancela sem consumir ou debitar. Se a inspecao rejeitar itens, so os faltantes voltam pra fila.
      *
-     * @param demanda demanda pendente registrada na fábrica
+     * @param demanda demanda pendente registrada na fabrica
      * @param produtoModelo modelo do mesmo tipo da demanda
      * @return true se atendeu tudo, ou false se restaram produtos rejeitados
-     * @throws DemandaInvalidaException se demanda, tipo ou estado forem inválidos
+     * @throws DemandaInvalidaException se demanda, tipo ou estado forem invalidos
      * @throws RecursoInsuficienteException se faltar estoque ou budget
-     * @throws IllegalArgumentException se a linha ou os totais não forem válidos
+     * @throws IllegalArgumentException se a linha ou os totais nao forem validos
      */
     public boolean fabricarDemanda(Demanda demanda, Produto produtoModelo) {
         if (demanda == null || !demandas.contains(demanda)) {
@@ -241,7 +238,7 @@ public class GerenciadorProducao {
             throw new IllegalArgumentException("O limite de lotes ou produtos dessa execução foi atingido.");
         }
 
-        // Antes de começar o lote, verificamos se existem recursos suficientes para atender a demanda
+        // Confere os recursos antes de comecar.
         if (!materiaPrima.verificarDisponibilidade(materiaPrimaNecessaria)) {
             demanda.cancelar();
             throw new RecursoInsuficienteException(
@@ -256,7 +253,7 @@ public class GerenciadorProducao {
                     + "Demanda cancelada. Estoque e orçamento não foram alterados.", custoProducao, budget));
         }
 
-        // Os objetos do lote tb são preparados antes de mudar demanda ou recurso.
+        // Cria os produtos antes de mexer nos recursos.
         ArrayList<Produto> produtosLote = new ArrayList<>();
         for (int i = 0; i < quantidadeSolicitada; i++) {
             Produto produto = criarProduto(produtoModelo, Produto.getTotalProdutosFabricados() + i + 1);
@@ -266,10 +263,10 @@ public class GerenciadorProducao {
         }
 
         demanda.iniciarProducao();
-        // Consumir o total evita erro de arredondamento em vários descontos pequenos.
+        // Desconta o total de uma vez pra evitar arredondamento.
         materiaPrima.consumir(materiaPrimaNecessaria);
 
-        // Cada tentativa de produção recebe um lote próprio, mesmo que parte dos produtos seja rejeitada
+        // Cada tentativa recebe um lote novo, mesmo se houver rejeicao.
         int loteAtual = proximoLote++;
         int produtosAprovados = 0;
 
@@ -282,7 +279,7 @@ public class GerenciadorProducao {
             boolean aprovado = true;
 
             for (Maquina maquina : maquinas) {
-                // Se a máquina chegou a zero de saúde, ela precisa ser reparada antes de continuar o lote.
+                // Se quebrou, repara antes de continuar.
                 if (maquina.quebrada()) {
                     System.out.println("\n[AVISO] - Produção interrompida!");
                     System.out.println("[AVISO] - A máquina " + maquina.getNome() + " está quebrada.");
@@ -290,7 +287,7 @@ public class GerenciadorProducao {
                     System.out.println("[AVISO] - Máquina reparada. Produção retomada.");
                 }
 
-                // O lote já cabe no budget; um resíduo de double não pode deixar saldo negativo.
+                // Evita saldo negativo por arredondamento.
                 budget = Math.max(0.0, budget - maquina.getCustoOperacao());
                 if (!maquina.processar(produto)) {
                     aprovado = false;
@@ -317,7 +314,7 @@ public class GerenciadorProducao {
             return true;
         }
 
-        // A demanda volta para a fila somente com o que ainda ficou faltando produzir.
+        // Volta pra fila so oq falta produzir.
         demanda.voltarParaPendente();
         demanda.atualizarQuantidade(produtosRejeitados);
         demanda.setCustoTotal(calcularCustoProducao(produtosRejeitados));
@@ -331,10 +328,10 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Busca o modelo cadastrado pra um tipo de cosmético.
+     * Busca o modelo do produto pelo tipo.
      *
      * @param tipoProduto tipo procurado
-     * @return modelo correspondente, ou null se não estiver cadastrado
+     * @return modelo do mesmo tipo, ou null se nao estiver guardado
      */
     private Produto buscarProdutoModelo(TipoProduto tipoProduto) {
         for (Produto produto : produtosModelos) {
@@ -346,11 +343,11 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Estima o custo de passar a qtd solicitada por todas as máquinas.
+     * Soma o custo das maquinas pra qtd pedida.
      *
-     * @param quantidadeProdutos qtd não negativa de itens do lote
-     * @return custo operacional total, sem compra de matéria-prima
-     * @throws IllegalArgumentException se a qtd ou o custo calculado forem inválidos
+     * @param quantidadeProdutos qtd nao negativa de itens do lote
+     * @return custo operacional total, sem compra de materia-prima
+     * @throws IllegalArgumentException se a qtd ou o custo calculado forem invalidos
      */
     private double calcularCustoProducao(int quantidadeProdutos) {
         if (quantidadeProdutos < 0) {
@@ -368,23 +365,23 @@ public class GerenciadorProducao {
     }
 
     /**
-     * Disponibiliza a estimativa usada pelo menu ao cadastrar uma demanda.
+     * Retorna o custo de producao da qtd pedida.
      *
      * @param quantidadeProdutos qtd de itens a fabricar
      * @return custo operacional estimado do lote
-     * @throws IllegalArgumentException se a qtd ou o custo calculado forem inválidos
+     * @throws IllegalArgumentException se a qtd ou o custo calculado forem invalidos
      */
     public double getCustoProducao(int quantidadeProdutos) {
         return calcularCustoProducao(quantidadeProdutos);
     }
 
     /**
-     * Cria um item independente do modelo, sem reaproveitar estado de outro lote.
+     * Cria um produto novo a partir do modelo, sem copiar o status de outro lote.
      *
-     * @param produtoModelo modelo cadastrado do cosmético
-     * @param numeroProduto número sequencial do novo item
-     * @return nova instância do tipo do modelo
-     * @throws DemandaInvalidaException se o modelo não for de um tipo suportado
+     * @param produtoModelo modelo guardado do produto
+     * @param numeroProduto numero sequencial do novo item
+     * @return nova objeto do tipo do modelo
+     * @throws DemandaInvalidaException se o modelo nao for de um tipo suportado
      */
     private Produto criarProduto(Produto produtoModelo, int numeroProduto) {
         String id = produtoModelo.getId() + "-" + numeroProduto;
@@ -401,7 +398,7 @@ public class GerenciadorProducao {
         throw new DemandaInvalidaException("O tipo desse modelo de produto não é suportado pela fábrica.");
     }
 
-    /** Exibe uma auditoria comum pra produtos e máquinas que implementam Auditavel. */
+    /** Mostra a auditoria dos produtos e das maquinas usando Auditavel. */
     public void gerarAuditoriaGeral() {
         System.out.println("\n=== AUDITORIA GERAL ===");
         ArrayList<Auditavel> itensAuditaveis = new ArrayList<>();
@@ -413,13 +410,13 @@ public class GerenciadorProducao {
             return;
         }
 
-        // Como máquinas e produtos são Auditavel, o mesmo laço serve para os dois tipos de objeto.
+        // Auditavel permite usar o mesmo laco pra produtos e maquinas.
         for (Auditavel item : itensAuditaveis) {
             System.out.println(item.gerarRelatorioDiagnostico());
         }
     }
 
-    /** Mostra o diagnóstico individual dos produtos aprovados no armazém. */
+    /** Mostra os dados dos produtos aprovados. */
     public void detalharProdutos() {
         System.out.println("\n[PRODUTOS]");
         if (produtosFabricados.isEmpty()) {
@@ -432,7 +429,7 @@ public class GerenciadorProducao {
         }
     }
 
-    /** Mostra saúde, manutenção, falhas e chance base de cada máquina. */
+    /** Mostra saude, falhas e manutencao das maquinas. */
     public void detalharMaquinas() {
         System.out.println("\n[MÁQUINAS]");
         for (Maquina maquina : maquinas) {
@@ -443,7 +440,7 @@ public class GerenciadorProducao {
         }
     }
 
-    /** Exibe totais por tipo e detalhes dos lotes aprovados no armazém. */
+    /** Mostra os produtos guardados e os dados dos lotes. */
     public void exibirArmazem() {
         System.out.println("\n=== ARMAZÉM DE PRODUTOS ACABADOS ===");
         if (produtosFabricados.isEmpty()) {
@@ -483,7 +480,7 @@ public class GerenciadorProducao {
         }
     }
 
-    /** Lista demandas com a qtd que falta, o estado e o custo estimado. */
+    /** Mostra qtd, status e custo das demandas. */
     public void exibirDemandas() {
         if (demandas.isEmpty()) {
             System.out.println("Não existem demandas.");
@@ -501,47 +498,47 @@ public class GerenciadorProducao {
         System.out.println();
     }
 
-    /** Exibe o budget disponível pras próximas operações. */
+    /** Mostra o budget atual. */
     public void exibirBudget() {
         System.out.printf("Budget atual: R$ %.2f%n", budget);
     }
 
-    /** Exibe qual regra Strategy está escolhendo as próximas demandas. */
+    /** Mostra a regra usada pra escolher a demanda. */
     public void exibirEstrategiaAtual() {
         System.out.println("Estratégia atual: " + estrategiaAtual.getNomeEstrategia());
     }
 
     /**
-     * Consulta o orçamento disponível.
+     * Retorna o budget atual.
      *
-     * @return budget atual da fábrica
+     * @return budget atual da fabrica
      */
     public double getBudget() {
         return budget;
     }
 
     /**
-     * Consulta o estoque usado pela fábrica.
+     * Retorna a materia-prima usada pela fabrica.
      *
-     * @return matéria-prima compartilhada com a produção
+     * @return materia-prima compartilhada com a producao
      */
     public MateriaPrima getMateriaPrima() {
         return materiaPrima;
     }
 
     /**
-     * Consulta os aprovados sem permitir apagar itens da lista interna por fora.
+     * Retorna uma copia da lista de produtos aprovados.
      *
-     * @return cópia da lista de produtos aprovados
+     * @return copia da lista de produtos aprovados
      */
     public ArrayList<Produto> getProdutosFabricados() {
         return new ArrayList<>(produtosFabricados);
     }
 
     /**
-     * Consulta a fila sem expor a estrutura da lista interna.
+     * Retorna uma copia da lista de demandas.
      *
-     * @return cópia da lista de demandas registradas
+     * @return copia da lista de demandas registradas
      */
     public ArrayList<Demanda> getDemandas() {
         return new ArrayList<>(demandas);

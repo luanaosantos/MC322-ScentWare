@@ -1,19 +1,22 @@
+// Etapa de mistura dos produtos.
+
 /**
- * Inicia o processamento e acumula riscos da homogeneização.
+ * Mistura o produto e pode aumentar o risco na inspecao.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class MaquinaHomogeneizador extends Maquina {
     /**
-     * Configura a etapa com os valores do cenário.
-     * @param nome nome da máquina
+     * Cria o homogeneizador com os valores do cenario.
+     *
+     * @param nome nome da maquina
      * @param capacidadeMaxima capacidade finita e positiva
-     * @param probabilidadeFalha chance básica entre zero e um
-     * @param custoOperacao custo finito e não negativo de cada uso
-     * @param health saúde entre zero e cem
-     * @param maximoDesgaste desgaste máximo finito e não negativo
-     * @throws IllegalArgumentException se os dados forem inválidos, conforme a classe Maquina
+     * @param probabilidadeFalha chance basica entre zero e um
+     * @param custoOperacao custo finito e nao negativo de cada uso
+     * @param health saude entre zero e cem
+     * @param maximoDesgaste desgaste maximo finito e nao negativo
+     * @throws IllegalArgumentException se os dados forem invalidos, conforme a classe Maquina
      */
     public MaquinaHomogeneizador(
             String nome,
@@ -27,8 +30,9 @@ public class MaquinaHomogeneizador extends Maquina {
     }
 
     /**
-     * Executa a etapa e leva eventuais riscos até a inspeção.
-     * @param produto unidade não nula a processar
+     * Mistura o produto e soma risco se a maquina falhar.
+     *
+     * @param produto unidade nao nula a processar
      * @return true depois da etapa
      * @throws IllegalArgumentException se o produto estiver ausente
      */
@@ -41,7 +45,7 @@ public class MaquinaHomogeneizador extends Maquina {
         try {
             produto.processar();
 
-            // Uma falha aqui aumenta o risco levado até a inspeção.
+            // Falha na mistura aumenta o risco na inspecao.
             if (verificarFalha()) {
                 produto.aumentarProbabilidadeFalha(getProbabilidadeFalha());
             }
@@ -49,13 +53,14 @@ public class MaquinaHomogeneizador extends Maquina {
             desgasteAleatorio();
             return true;
         } finally {
-            // Mesmo se a etapa der erro, não deixamos a máquina ligada.
+            // Desliga mesmo se der erro.
             desligar();
         }
     }
 
     /**
-     * Identifica esta etapa da linha.
+     * Retorna o tipo da maquina.
+     *
      * @return tipo Homogeneizador
      */
     @Override

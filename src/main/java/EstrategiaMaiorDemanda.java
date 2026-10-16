@@ -1,19 +1,20 @@
+// Escolha da demanda com mais itens pendentes.
+
 import java.util.List;
 
 /**
- * Strategy que dá prioridade à maior quantidade ainda pendente.
+ * Regra do Strategy q prioriza a maior demanda pendente.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class EstrategiaMaiorDemanda implements EstrategiaProducao {
     /**
-     * Escolhe a maior demanda pendente com quantidade positiva, sem filtrar budget.
-     * Em empate, mantém a primeira da lista; o gerenciador valida os recursos.
+     * Pega a maior demanda pendente com itens. Nao filtra budget e, se empatar, pega a primeira.
      *
      * @param demandas fila de demandas, na ordem de registro
-     * @param orcamentoDisponivel budget atual, não usado nesta regra
-     * @return maior candidata elegível, ou {@code null} se não houver nenhuma
+     * @param orcamentoDisponivel budget atual, nao usado nesta regra
+     * @return maior candidata elegivel, ou {@code null} se nao houver nenhuma
      */
     @Override
     public Demanda selecionarDemanda(List<Demanda> demandas, double orcamentoDisponivel) {
@@ -30,7 +31,7 @@ public class EstrategiaMaiorDemanda implements EstrategiaProducao {
     }
 
     /**
-     * Consulta o nome da regra de maior demanda.
+     * Retorna o nome da regra.
      *
      * @return nome exibido no menu
      */

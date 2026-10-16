@@ -1,5 +1,7 @@
+// Erro base das regras da fabrica.
+
 /**
- * Erro de regra da fábrica que pode ser explicado no menu pra continuar usando o sistema.
+ * Erro de regra da fabrica q o menu pode tratar.
  *
  * @author Luana Oliveira e Roberta Santos
  */
@@ -7,9 +9,9 @@ public class PlantaException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Guarda o motivo da operação não ter dado certo.
+     * Guarda a mensagem do erro da fabrica.
      *
-     * @param mensagem explicação do erro pra quem está usando o sistema
+     * @param mensagem explicacao do erro pra quem esta usando o sistema
      */
     public PlantaException(String mensagem) {
         super(mensagem);

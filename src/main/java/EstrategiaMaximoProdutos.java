@@ -1,28 +1,27 @@
+// Escolha da maior demanda q cabe no budget.
+
 import java.util.List;
 
 /**
- * Strategy que escolhe a maior quantidade entre as demandas que cabem no budget.
+ * Regra do Strategy q escolhe a maior demanda dentro do budget.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class EstrategiaMaximoProdutos implements EstrategiaProducao {
     /**
-     * Compara as demandas pendentes com itens e custo estimado dentro do budget.
-     * Em empate de quantidade, mantém a primeira da lista. A disponibilidade de
-     * matéria-prima continua sendo conferida pelo gerenciador depois da seleção.
+     * Pega a maior demanda q cabe no budget. Se empatar, pega a primeira. O estoque e conferido depois.
      *
      * @param demandas fila de demandas, na ordem de registro
-     * @param orcamentoDisponivel budget máximo aceito pra demanda
-     * @return maior candidata viável financeiramente, ou {@code null} se não houver
-     * @throws IllegalArgumentException se a consulta de viabilidade receber budget
-     *         negativo ou não finito
+     * @param orcamentoDisponivel budget maximo aceito pra demanda
+     * @return maior demanda q cabe no budget, ou {@code null} se nao houver
+     * @throws IllegalArgumentException se o budget usado na comparacao for negativo, NaN ou infinito
      */
     @Override
     public Demanda selecionarDemanda(List<Demanda> demandas, double orcamentoDisponivel) {
         Demanda demandaMaximoProdutos = null;
 
-        // Entre as demandas que cabem no budget atual, escolhemos a que produz mais unidades
+        // Pega a maior qtd entre as demandas q cabem no budget.
         for (Demanda demanda : demandas) {
             if (demanda.viabilidadeFinanceira(orcamentoDisponivel)) {
                 if (demandaMaximoProdutos == null || demanda.getQuantidadeProdutos() > demandaMaximoProdutos.getQuantidadeProdutos()) {
@@ -34,7 +33,7 @@ public class EstrategiaMaximoProdutos implements EstrategiaProducao {
     }
 
     /**
-     * Consulta o nome da regra que considera o budget.
+     * Retorna o nome da regra.
      *
      * @return nome exibido no menu
      */

@@ -1,21 +1,21 @@
+// Menu da fabrica e leitura das opcoes.
+
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * Cuida dos menus e das entradas pra usar a fábrica pelo terminal.
- * As regras da produção ficam no gerenciador; aqui a gente mostra os erros
- * recuperáveis e deixa escolher a próxima operação.
+ * Cuida dos menus e das entradas. As regras da fabrica ficam no gerenciador.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class Main {
     /**
-     * Abre o cenário escolhido e mantém os menus até sair ou acabar a entrada.
+     * Abre o cenario e o menu. Encerra quando a pessoa sai ou acaba a entrada.
      *
-     * @param args argumentos da execução, não usados pelos menus
+     * @param args argumentos da execucao, nao usados pelos menus
      */
     public static void main(String[] args) {
         exibirIntroducao();
@@ -39,7 +39,7 @@ public class Main {
                     break;
             }
 
-            // Matéria-prima principal usada pelos três produtos da fábrica.
+            // Os tres produtos usam esse material.
             MateriaPrima oleoAmendoas = new MateriaPrima(
                     "MP001",
                     "Oleo de Amendoas",
@@ -48,7 +48,7 @@ public class Main {
                     0.10
             );
 
-            // Estes objetos funcionam como modelos para criar os produtos de cada lote.
+            // Modelos pra criar os produtos de cada lote.
             Produto hidratante = new ProdutoHidratante(
                     "P001",
                     "Hidratante Corporal",
@@ -66,13 +66,13 @@ public class Main {
                     "Esfoliante Corporal",
                     40.0
             );
-            // As estratégias ficam separadas para podermos trocar a regra de escolha durante a execução.
+            // Deixa as regras prontas pra trocar pelo menu.
             EstrategiaProducao estrategiaOrdemChegada = new EstrategiaOrdemChegada();
             EstrategiaProducao estrategiaMaximoProdutos = new EstrategiaMaximoProdutos();
             EstrategiaProducao estrategiaMaiorDemanda = new EstrategiaMaiorDemanda();
 
 
-            // O gerenciador concentra a lógica da fábrica e deixa o Main mais voltado para os menus.
+            // O gerenciador cuida das regras; o Main cuida do menu.
             GerenciadorProducao gerenciador = new GerenciadorProducao(
                     oleoAmendoas,
                     cenarioAtual.getBudget(),
@@ -81,7 +81,7 @@ public class Main {
                     cenarioAtual.getRiscoInicialProduto()
             );
 
-            // As taxas de falha e desgaste mudam de acordo com o cenário escolhido.
+            // Falha e desgaste dependem do cenario.
             gerenciador.adicionarMaquina(
                     new MaquinaHomogeneizador(
                             "Homogeneizador",
@@ -125,7 +125,7 @@ public class Main {
                 System.out.print("Escolha uma opcao: ");
                 opcao = lerInteiroEntre(scanner, 0, 6);
 
-                // Só os erros esperados da operação voltam pro menu.
+                // Mostra o erro e deixa tentar outra operacao.
                 try {
                     switch (opcao){
                         // Submenu de demandas.
@@ -266,7 +266,7 @@ public class Main {
     }
 
     /**
-     * Mostra os produtos, a matéria-prima e as autoras pra apresentar a fábrica.
+     * Mostra a apresentacao da fabrica.
      */
     private static void exibirIntroducao() {
         System.out.println("===============================================================");
@@ -289,10 +289,10 @@ public class Main {
     }
 
     /**
-     * Mostra as operações junto do cenário, estratégia e budget atuais.
+     * Mostra as opcoes, o cenario e o budget.
      *
-     * @param gerenciador fábrica que vai fornecer os dados do menu
-     * @param cenarioAtual cenário escolhido no começo da execução
+     * @param gerenciador fabrica que vai fornecer os dados do menu
+     * @param cenarioAtual cenario escolhido no comeco da execucao
      */
     private static void exibirMenuPrincipal(GerenciadorProducao gerenciador, Cenario cenarioAtual) {
         System.out.println("\n================================");
@@ -311,7 +311,7 @@ public class Main {
         System.out.println("================================");
     }
     /**
-     * Mostra as opções pra atualizar ou consultar as demandas.
+     * Mostra as opcoes de demandas.
      */
     private static void subMenuDemandas(){
         System.out.println("[ x ] DEMANDAS");
@@ -320,7 +320,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra os tipos de produto pra escolher qual demanda atualizar.
+     * Mostra os produtos pra atualizar a demanda.
      */
     private static void subMenuAtualizarDemanda(){
         System.out.println("[ x ] ATUALIZAR DEMANDAS");
@@ -330,7 +330,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra a produção por estratégia ou por produto específico.
+     * Mostra as opcoes de fabricacao.
      */
     private static void subMenuFabricar(){
         System.out.println("[ x ] FABRICAR");
@@ -339,7 +339,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra os produtos que podem ter uma demanda fabricada diretamente.
+     * Mostra os produtos pra escolher oq fabricar.
      */
     private static void subMenuFabricarItemEspecifico(){
         System.out.println("[ x ] FABRICAR ITEM ESPECÍFICO");
@@ -349,7 +349,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra as consultas de armazém e estoque disponíveis.
+     * Mostra as opcoes de consulta.
      */
     private static void subMenuConsultar(){
         System.out.println("[ x ] CONSULTAR");
@@ -358,7 +358,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra as regras do Strategy pra trocar a escolha da próxima demanda.
+     * Mostra as regras pra escolher a proxima demanda.
      */
     private static void subMenugerenciarEstrategia(){
         System.out.println("[ x ] GERENCIAR ESTRATÉGIA");
@@ -368,7 +368,7 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Mostra os relatórios da fábrica, das máquinas e dos produtos.
+     * Mostra as opcoes de auditoria.
      */
     private static void subMenuAuditoria(){
         System.out.println("[ x ] AUDITORIA");
@@ -378,14 +378,13 @@ public class Main {
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
-     * Lê a qtd e atualiza a demanda pendente ou registra uma nova, se não houver.
-     * Uma atualização recusada não vira criação de outra demanda.
+     * Le a qtd e atualiza a demanda. Se nao houver uma pendente, cria outra.
      *
-     * @param scanner entrada compartilhada pelos menus
-     * @param gerenciador fábrica que guarda as demandas
+     * @param scanner entrada do terminal
+     * @param gerenciador fabrica que guarda as demandas
      * @param tipoProduto tipo escolhido pra atualizar
      * @throws IllegalArgumentException se a qtd for negativa
-     * @throws PlantaException se a demanda não puder receber a atualização
+     * @throws PlantaException se a demanda nao puder receber a atualizacao
      * @throws NoSuchElementException se a entrada acabar durante a leitura
      */
     private static void atualizarDemanda(
@@ -407,7 +406,7 @@ public class Main {
                     + quantidade + " unidades."
             );
         } else {
-            // false significa que não existe demanda pendente pra esse produto.
+            // false indica q ainda nao tem demanda pendente.
             Demanda demanda = new Demanda(tipoProduto, quantidade, gerenciador.getCustoProducao(quantidade));
             gerenciador.registrarDemanda(demanda);
             System.out.println("Demanda de " + tipoProduto.getNome() + " registrada com " + quantidade + " unidades.");
@@ -415,13 +414,12 @@ public class Main {
     }
 
     /**
-     * Procura a demanda pendente do produto e pede sua fabricação.
-     * A inspeção pode deixar itens faltantes; isso faz parte da simulação.
+     * Busca a demanda do produto e pede a fabricacao. Itens rejeitados podem ficar pendentes.
      *
-     * @param gerenciador fábrica responsável pela produção
+     * @param gerenciador fabrica responsavel pela producao
      * @param produto modelo do produto escolhido no submenu
-     * @throws DemandaInvalidaException se não existir demanda pendente
-     * @throws PlantaException se não for possível iniciar a produção
+     * @throws DemandaInvalidaException se nao existir demanda pendente
+     * @throws PlantaException se nao for possivel iniciar a producao
      */
     private static void fabricarProdutoEspecifico(
             GerenciadorProducao gerenciador,
@@ -445,9 +443,9 @@ public class Main {
     }
 
     /**
-     * Mostra a qtd disponível e o preço por unidade da matéria-prima.
+     * Mostra a qtd e o custo da materia-prima.
      *
-     * @param gerenciador fábrica que mantém o estoque
+     * @param gerenciador fabrica que mantem o estoque
      */
     private static void exibirEstoque(GerenciadorProducao gerenciador) {
         MateriaPrima materiaPrima = gerenciador.getMateriaPrima();
@@ -469,12 +467,12 @@ public class Main {
     }
 
     /**
-     * Lê a qtd pra compra e só mostra sucesso depois da confirmação do domínio.
+     * Le a qtd e pede a compra. So mostra sucesso se ela der certo.
      *
-     * @param scanner entrada compartilhada pelos menus
-     * @param gerenciador fábrica que valida e realiza a compra
-     * @throws IllegalArgumentException se a qtd não for válida pra compra
-     * @throws RecursoInsuficienteException se o budget não cobrir o custo
+     * @param scanner entrada do terminal
+     * @param gerenciador fabrica que valida e realiza a compra
+     * @throws IllegalArgumentException se a qtd nao for valida pra compra
+     * @throws RecursoInsuficienteException se o budget nao cobrir o custo
      * @throws NoSuchElementException se a entrada acabar durante a leitura
      */
     private static void comprarMateriaPrima(Scanner scanner, GerenciadorProducao gerenciador) {
@@ -499,9 +497,9 @@ public class Main {
     }
 
     /**
-     * Lê um inteiro e pede de novo quando o texto não representa um valor válido.
+     * Le um inteiro. Se a entrada estiver errada, pede de novo.
      *
-     * @param scanner entrada compartilhada pelos menus
+     * @param scanner entrada do terminal
      * @return inteiro informado, dentro dos limites do tipo int
      * @throws NoSuchElementException se a entrada acabar durante a leitura
      */
@@ -517,12 +515,12 @@ public class Main {
         }
     }
     /**
-     * Repete a leitura até receber uma opção dentro do intervalo do menu.
+     * Le uma opcao dentro do intervalo do menu.
      *
-     * @param scanner entrada compartilhada pelos menus
-     * @param a menor opção permitida, inclusiva
-     * @param b maior opção permitida, inclusiva
-     * @return opção válida dentro do intervalo
+     * @param scanner entrada do terminal
+     * @param a menor opcao permitida, inclusiva
+     * @param b maior opcao permitida, inclusiva
+     * @return opcao valida dentro do intervalo
      * @throws NoSuchElementException se a entrada acabar durante a leitura
      */
     private static int lerInteiroEntre(Scanner scanner, int a, int b){
@@ -539,11 +537,10 @@ public class Main {
     }
 
     /**
-     * Lê um número finito, aceitando vírgula ou ponto na parte decimal.
-     * Texto inválido, NaN e infinito pedem uma nova entrada.
+     * Le um numero com ponto ou virgula. Nao aceita NaN nem infinito.
      *
-     * @param scanner entrada compartilhada pelos menus
-     * @return número finito informado
+     * @param scanner entrada do terminal
+     * @return numero finito informado
      * @throws NoSuchElementException se a entrada acabar durante a leitura
      */
     private static double lerDouble(Scanner scanner) {
@@ -569,14 +566,14 @@ public class Main {
     }
 
     /**
-     * Lê uma linha e avisa quando a entrada terminou, sem repetir pra sempre.
+     * Le a proxima linha. Se a entrada acabou, avisa o main pra encerrar.
      *
-     * @param scanner entrada compartilhada pelos menus
-     * @return próxima linha disponível
-     * @throws NoSuchElementException se não houver outra linha
+     * @param scanner entrada do terminal
+     * @return proxima linha disponivel
+     * @throws NoSuchElementException se nao houver outra linha
      */
     private static String lerLinha(Scanner scanner) {
-        // EOF sobe até o main, que fecha o scanner e encerra a execução.
+        // Se a entrada acabou, o main fecha o Scanner e sai.
         if (!scanner.hasNextLine()) {
             throw new NoSuchElementException("A entrada do terminal terminou.");
         }

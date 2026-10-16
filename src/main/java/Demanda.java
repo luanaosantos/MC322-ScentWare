@@ -1,5 +1,7 @@
+// Pedido da fabrica, com qtd, custo e status.
+
 /**
- * Guarda a qtd ainda pendente e controla os estados de uma demanda.
+ * Guarda o pedido e controla seu status.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
@@ -11,13 +13,13 @@ public class Demanda {
     private double custoTotal;
 
     /**
-     * Cria uma demanda pendente; qtd zero fica aguardando uma atualização.
+     * Cria a demanda pendente. Qtd zero fica esperando uma atualizacao.
      *
      * @param tipoProduto tipo do produto pedido
-     * @param quantidadeProdutos qtd de itens ainda necessários
-     * @param custoTotal estimativa dos itens pendentes
-     * @throws DemandaInvalidaException se o tipo ou a qtd forem inválidos
-     * @throws IllegalArgumentException se o custo não for finito e não negativo
+     * @param quantidadeProdutos qtd de itens ainda necessarios
+     * @param custoTotal custo estimado dos itens pendentes
+     * @throws DemandaInvalidaException se o tipo ou a qtd forem invalidos
+     * @throws IllegalArgumentException se o custo nao for finito e nao negativo
      */
     public Demanda(
             TipoProduto tipoProduto,
@@ -38,12 +40,11 @@ public class Demanda {
     }
 
     /**
-     * Ajusta uma demanda pendente sem reabrir pedidos já encerrados.
-     * O gerenciador recalcula o custo conforme o modelo do produto.
+     * Muda a qtd da demanda pendente. O gerenciador recalcula o custo.
      *
      * @param novaQuantidade nova qtd pendente, podendo ser zero
-     * @return true depois da atualização
-     * @throws DemandaInvalidaException se a qtd ou o estado forem inválidos
+     * @return true depois da atualizacao
+     * @throws DemandaInvalidaException se a qtd ou o estado forem invalidos
      */
     public boolean atualizarQuantidade(int novaQuantidade) {
         if (novaQuantidade < 0 || status != StatusDemanda.PENDENTE) {
@@ -56,11 +57,11 @@ public class Demanda {
     }
 
     /**
-     * Calcula o consumo total sem mexer no estoque.
+     * Calcula quanto o pedido vai usar de materia-prima.
      *
      * @param produto modelo do mesmo tipo da demanda
-     * @return qtd de matéria-prima necessária
-     * @throws IllegalArgumentException se o modelo for incompatível ou o total não for finito
+     * @return qtd de materia-prima necessaria
+     * @throws IllegalArgumentException se o modelo for incompativel ou o total nao for finito
      */
     public double calcularMateriaPrimaNecessaria(Produto produto) {
         if (produto == null || produto.getTipo() != tipoProduto) {
@@ -74,11 +75,11 @@ public class Demanda {
     }
 
     /**
-     * Confere se há itens pendentes e dinheiro pra estimativa atual.
+     * Confere se a demanda tem itens pendentes e cabe no budget.
      *
-     * @param budget orçamento disponível
-     * @return true se a demanda puder ser financiada
-     * @throws IllegalArgumentException se o orçamento não for finito e não negativo
+     * @param budget budget atual
+     * @return true se a demanda puder ser paga com o budget
+     * @throws IllegalArgumentException se o orcamento nao for finito e nao negativo
      */
     public boolean viabilidadeFinanceira(double budget) {
         if (!Double.isFinite(budget) || budget < 0) {
@@ -88,10 +89,10 @@ public class Demanda {
     }
 
     /**
-     * Coloca uma demanda pendente com itens na linha de produção.
+     * Inicia a demanda se ela estiver pendente e tiver itens.
      *
      * @return true depois de iniciar
-     * @throws DemandaInvalidaException se não houver itens ou o estado for incompatível
+     * @throws DemandaInvalidaException se nao houver itens ou o estado for incompativel
      */
     public boolean iniciarProducao() {
         if (status != StatusDemanda.PENDENTE || quantidadeProdutos <= 0) {
@@ -102,9 +103,9 @@ public class Demanda {
     }
 
     /**
-     * Devolve a demanda à fila pra atualizar os itens que faltaram.
+     * Volta a demanda pra fila depois da tentativa de producao.
      *
-     * @throws DemandaInvalidaException se a demanda não estiver em produção
+     * @throws DemandaInvalidaException se a demanda nao estiver em producao
      */
     public void voltarParaPendente() {
         if (status != StatusDemanda.EM_PRODUCAO) {
@@ -114,9 +115,9 @@ public class Demanda {
     }
 
     /**
-     * Encerra a produção e zera qtd e custo, pois não restaram pendências.
+     * Conclui a demanda e zera a qtd e o custo pendentes.
      *
-     * @throws DemandaInvalidaException se a demanda não estiver em produção
+     * @throws DemandaInvalidaException se a demanda nao estiver em producao
      */
     public void concluir() {
         if (status != StatusDemanda.EM_PRODUCAO) {
@@ -128,9 +129,9 @@ public class Demanda {
     }
 
     /**
-     * Cancela um pedido ativo, mantendo a qtd e o custo pra consulta.
+     * Cancela a demanda e mantem seus dados pra consulta.
      *
-     * @throws DemandaInvalidaException se a demanda já estiver encerrada
+     * @throws DemandaInvalidaException se a demanda ja estiver encerrada
      */
     public void cancelar() {
         if (status != StatusDemanda.PENDENTE && status != StatusDemanda.EM_PRODUCAO) {
@@ -140,7 +141,8 @@ public class Demanda {
     }
 
     /**
-     * Consulta o tipo solicitado.
+     * Retorna o tipo pedido na demanda.
+     *
      * @return tipo do produto
      */
     public TipoProduto getTipoProduto() {
@@ -148,7 +150,8 @@ public class Demanda {
     }
 
     /**
-     * Consulta os itens ainda pedidos.
+     * Retorna a qtd q falta produzir.
+     *
      * @return qtd pendente
      */
     public int getQuantidadeProdutos() {
@@ -156,7 +159,8 @@ public class Demanda {
     }
 
     /**
-     * Consulta a etapa atual do pedido.
+     * Retorna o status atual.
+     *
      * @return estado da demanda
      */
     public StatusDemanda getStatus() {
@@ -164,7 +168,8 @@ public class Demanda {
     }
 
     /**
-     * Consulta a estimativa dos itens pendentes.
+     * Retorna o custo dos itens pendentes.
+     *
      * @return custo total atual
      */
     public double getCustoTotal() {
@@ -172,9 +177,9 @@ public class Demanda {
     }
 
     /**
-     * Atualiza a estimativa após recalcular os itens pendentes.
+     * Atualiza o custo dos itens pendentes.
      *
-     * @param custoTotal custo finito e não negativo
+     * @param custoTotal custo finito e nao negativo
      * @throws IllegalArgumentException se o custo estiver fora da faixa
      */
     public void setCustoTotal(double custoTotal) {

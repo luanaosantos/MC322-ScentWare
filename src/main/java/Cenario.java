@@ -1,14 +1,15 @@
+// Valores dos cenarios Ideal e Apocaliptico.
+
 /**
- * Reúne os parâmetros que mudam o funcionamento da mesma fábrica.
- * As chances ficam entre zero e um; o desgaste é medido em pontos de saúde.
+ * Guarda os valores usados pra montar cada cenario.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public enum Cenario {
-    /** Operação com budget maior e riscos e desgastes menores. */
+    /** Mais budget, menos falhas e desgaste. */
     IDEAL("Ideal", 1000.0, 0.02, 0.05, 0.03, 0.05, 3.0, 3.0, 3.0),
-    /** Operação com budget menor e riscos e desgastes maiores. */
+    /** Menos budget, mais falhas e desgaste. */
     APOCALIPTICO("Apocalíptico", 100.0, 0.20, 0.45, 0.35, 0.45, 15.0, 15.0, 20.0);
 
     private final String nome;
@@ -22,17 +23,17 @@ public enum Cenario {
     private final double maximoDesgasteInspecao;
 
     /**
-     * Guarda a configuração que o Main usa pra montar a fábrica.
+     * Guarda os valores usados pra montar o cenario.
      *
      * @param nome nome exibido no menu
-     * @param budget orçamento inicial em reais
+     * @param budget budget inicial em reais
      * @param riscoInicialProduto risco aplicado a cada produto novo
-     * @param probabilidadeFalhaHomogeneizador chance básica de falha do homogeneizador
-     * @param probabilidadeFalhaEmpacotador chance básica de falha da empacotadora
-     * @param probabilidadeFalhaInspecao chance básica de falha da inspeção
-     * @param maximoDesgasteHomogeneizador desgaste máximo por uso do homogeneizador
-     * @param maximoDesgasteEmpacotador desgaste máximo por uso da empacotadora
-     * @param maximoDesgasteInspecao desgaste máximo por uso da inspeção
+     * @param probabilidadeFalhaHomogeneizador chance basica de falha do homogeneizador
+     * @param probabilidadeFalhaEmpacotador chance basica de falha da empacotadora
+     * @param probabilidadeFalhaInspecao chance basica de falha da inspecao
+     * @param maximoDesgasteHomogeneizador desgaste maximo por uso do homogeneizador
+     * @param maximoDesgasteEmpacotador desgaste maximo por uso da empacotadora
+     * @param maximoDesgasteInspecao desgaste maximo por uso da inspecao
      */
     Cenario(
             String nome,
@@ -57,7 +58,7 @@ public enum Cenario {
     }
 
     /**
-     * Consulta quanto a fábrica tem pra começar a operação.
+     * Retorna o budget inicial do cenario.
      *
      * @return budget inicial em reais
      */
@@ -66,7 +67,7 @@ public enum Cenario {
     }
 
     /**
-     * Consulta o risco inicial de cada produto novo.
+     * Retorna o risco inicial do produto.
      *
      * @return risco inicial entre zero e um
      */
@@ -75,7 +76,7 @@ public enum Cenario {
     }
 
     /**
-     * Consulta a chance básica de falha do homogeneizador.
+     * Retorna a chance de falha do homogeneizador.
      *
      * @return probabilidade entre zero e um
      */
@@ -84,7 +85,7 @@ public enum Cenario {
     }
 
     /**
-     * Consulta a chance básica de falha da empacotadora.
+     * Retorna a chance de falha da empacotadora.
      *
      * @return probabilidade entre zero e um
      */
@@ -93,7 +94,7 @@ public enum Cenario {
     }
 
     /**
-     * Consulta a chance básica de falha da inspeção.
+     * Retorna a chance de falha da inspecao.
      *
      * @return probabilidade entre zero e um
      */
@@ -102,34 +103,34 @@ public enum Cenario {
     }
 
     /**
-     * Consulta o limite do desgaste sorteado a cada uso do homogeneizador.
+     * Retorna o desgaste maximo do homogeneizador por uso.
      *
-     * @return desgaste máximo em pontos de saúde
+     * @return desgaste maximo em pontos de saude
      */
     public double getMaximoDesgasteHomogeneizador() {
         return maximoDesgasteHomogeneizador;
     }
 
     /**
-     * Consulta o limite do desgaste sorteado a cada uso da empacotadora.
+     * Retorna o desgaste maximo da empacotadora por uso.
      *
-     * @return desgaste máximo em pontos de saúde
+     * @return desgaste maximo em pontos de saude
      */
     public double getMaximoDesgasteEmpacotador() {
         return maximoDesgasteEmpacotador;
     }
 
     /**
-     * Consulta o limite do desgaste sorteado a cada uso da inspeção.
+     * Retorna o desgaste maximo da inspecao por uso.
      *
-     * @return desgaste máximo em pontos de saúde
+     * @return desgaste maximo em pontos de saude
      */
     public double getMaximoDesgasteInspecao() {
         return maximoDesgasteInspecao;
     }
 
     /**
-     * Mostra o nome do cenário no terminal pra acompanhar o menu.
+     * Mostra o cenario escolhido.
      */
     public void exibirCenarioAtual() {
         System.out.println("Cenário atual: " + nome);
