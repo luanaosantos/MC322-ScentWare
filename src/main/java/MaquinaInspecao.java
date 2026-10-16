@@ -1,7 +1,9 @@
+// Inspecao final dos produtos.
+
 import java.util.Random;
 
 /**
- * Decide a aprovação por sorteio, conforme qualidade e riscos acumulados.
+ * Sorteia se o produto passa ou nao pela inspecao.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
@@ -10,14 +12,15 @@ public class MaquinaInspecao extends Maquina {
     private Random random = new Random();
 
     /**
-     * Configura a etapa com os valores do cenário.
-     * @param nome nome da máquina
+     * Cria a inspecao com os valores do cenario.
+     *
+     * @param nome nome da maquina
      * @param capacidadeMaxima capacidade finita e positiva
-     * @param probabilidadeFalha chance básica entre zero e um
-     * @param custoOperacao custo finito e não negativo de cada uso
-     * @param health saúde entre zero e cem
-     * @param maximoDesgaste desgaste máximo finito e não negativo
-     * @throws IllegalArgumentException se os dados forem inválidos, conforme a classe Maquina
+     * @param probabilidadeFalha chance basica entre zero e um
+     * @param custoOperacao custo finito e nao negativo de cada uso
+     * @param health saude entre zero e cem
+     * @param maximoDesgaste desgaste maximo finito e nao negativo
+     * @throws IllegalArgumentException se os dados forem invalidos, conforme a classe Maquina
      */
     public MaquinaInspecao(
             String nome,
@@ -31,8 +34,9 @@ public class MaquinaInspecao extends Maquina {
     }
 
     /**
-     * Inspeciona a unidade; rejeição faz parte da simulação e não é exceção.
-     * @param produto unidade não nula a processar
+     * Sorteia a aprovacao do produto. Rejeicao faz parte da simulacao.
+     *
+     * @param produto unidade nao nula a processar
      * @return true se a unidade foi aprovada, ou false se foi rejeitada
      * @throws IllegalArgumentException se o produto estiver ausente
      */
@@ -43,15 +47,15 @@ public class MaquinaInspecao extends Maquina {
         }
         ligar();
         try {
-            // Quanto maior a qualidade, menor a chance básica de rejeição.
-            // Os problemas acumulados nas etapas anteriores aumentam essa chance.
+            // Qualidade maior reduz a chance de rejeicao.
+            // O risco das outras etapas aumenta essa chance.
             double chanceRejeicao = (1.0 - produto.getQualidade())
                     + produto.getProbabilidadeFalhaAcumulada() * 0.5;
             chanceRejeicao = Math.min(1.0, chanceRejeicao);
 
             boolean rejeitado = random.nextDouble() < chanceRejeicao;
 
-            // Se a própria inspeção falhar, ela pode dar o resultado contrário.
+            // Se a inspecao falhar, inverte o resultado.
             if (verificarFalha()) {
                 rejeitado = !rejeitado;
             }
@@ -64,13 +68,14 @@ public class MaquinaInspecao extends Maquina {
             desgasteAleatorio();
             return !rejeitado;
         } finally {
-            // Mesmo se a etapa der erro, não deixamos a máquina ligada.
+            // Desliga mesmo se der erro.
             desligar();
         }
     }
 
     /**
-     * Identifica esta etapa da linha.
+     * Retorna o tipo da maquina.
+     *
      * @return tipo Inspecao
      */
     @Override

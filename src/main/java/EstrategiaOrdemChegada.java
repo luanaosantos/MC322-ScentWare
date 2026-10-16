@@ -1,19 +1,20 @@
+// Escolha da demanda por ordem de chegada.
+
 import java.util.List;
 
 /**
- * Strategy que respeita a ordem de chegada das demandas elegíveis.
+ * Regra do Strategy q segue a ordem de chegada.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public class EstrategiaOrdemChegada implements EstrategiaProducao {
     /**
-     * Pega a primeira demanda pendente com itens pra produzir.
-     * O budget não filtra a escolha; o gerenciador confere os recursos depois.
+     * Pega a primeira demanda pendente com itens. O budget e conferido depois.
      *
      * @param demandas fila de demandas, na ordem de registro
-     * @param orcamentoDisponivel budget atual, não usado nesta regra
-     * @return primeira candidata elegível, ou {@code null} se não houver nenhuma
+     * @param orcamentoDisponivel budget atual, nao usado nesta regra
+     * @return primeira candidata elegivel, ou {@code null} se nao houver nenhuma
      */
     @Override
     public Demanda selecionarDemanda(List<Demanda> demandas, double orcamentoDisponivel) {
@@ -26,7 +27,7 @@ public class EstrategiaOrdemChegada implements EstrategiaProducao {
     }
 
     /**
-     * Consulta o nome da regra de chegada.
+     * Retorna o nome da regra.
      *
      * @return nome exibido no menu
      */

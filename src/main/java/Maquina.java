@@ -1,8 +1,9 @@
+// Base das maquinas da linha de producao.
+
 import java.util.Random;
 
 /**
- * Guarda custo, desgaste e falhas de uma etapa da linha de produção.
- * A simulação usa sorteio e o gerenciador cuida do reparo automático.
+ * Guarda custo, saude e falhas da maquina. O gerenciador faz o reparo automatico.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
@@ -19,15 +20,15 @@ public abstract class Maquina implements Auditavel {
     private Random random = new Random();
 
     /**
-     * Cria uma máquina desligada com os parâmetros do cenário.
+     * Cria a maquina desligada com os valores do cenario.
      *
-     * @param nome nome da máquina
+     * @param nome nome da maquina
      * @param capacidadeMaxima capacidade finita e positiva
-     * @param probabilidadeFalha chance básica de falha entre zero e um
-     * @param custoOperacao custo não negativo de cada uso
-     * @param health saúde inicial entre zero e cem
-     * @param maximoDesgaste desgaste máximo não negativo por uso
-     * @throws IllegalArgumentException se o nome ou algum parâmetro forem inválidos
+     * @param probabilidadeFalha chance basica de falha entre zero e um
+     * @param custoOperacao custo nao negativo de cada uso
+     * @param health saude inicial entre zero e cem
+     * @param maximoDesgaste desgaste maximo nao negativo por uso
+     * @throws IllegalArgumentException se o nome ou algum parametro forem invalidos
      */
     public Maquina(
             String nome,
@@ -58,22 +59,25 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Executa a etapa e desliga a máquina ao terminar, inclusive após erro.
-     * @param produto unidade não nula da produção
-     * @return resultado da etapa; false na inspeção significa rejeição normal
-     * @throws IllegalArgumentException se não houver produto
+     * Define a etapa da maquina. As subclasses desligam ao terminar, mesmo com erro.
+     *
+     * @param produto unidade nao nula da producao
+     * @return resultado da etapa; false na inspecao significa rejeicao normal
+     * @throws IllegalArgumentException se nao houver produto
      */
     public abstract boolean processar(Produto produto);
 
     /**
-     * Identifica a etapa da máquina na linha.
-     * @return tipo da máquina
+     * Retorna o tipo da maquina.
+     *
+     * @return tipo da maquina
      */
     public abstract String getTipo();
 
     /**
-     * Mostra saúde e falhas pra auditoria da fábrica.
-     * @return diagnóstico formatado
+     * Monta o relatorio de saude e falhas da maquina.
+     *
+     * @return texto do relatorio
      */
     @Override
     public String gerarRelatorioDiagnostico() {
@@ -88,8 +92,9 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Indica manutenção preventiva com saúde abaixo de 30%.
-     * @return true quando a máquina precisa de atenção
+     * Confere se a saude esta abaixo de 30%.
+     *
+     * @return true quando a maquina precisa de atencao
      */
     @Override
     public boolean precisaManutencao() {
@@ -97,35 +102,37 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Confere se a saúde chegou a zero.
-     * @return true quando há necessidade de reparo
+     * Confere se a saude chegou a zero.
+     *
+     * @return true quando ha necessidade de reparo
      */
     public boolean quebrada() {
         return health <= 0.0;
     }
 
-    /** Soma uma falha detectada durante o sorteio da etapa. */
+    /** Soma uma falha no contador. */
     public void contabilizarFalha() {
         falhas++;
     }
 
-    /** Restaura a saúde pra 100%, preservando o histórico de falhas. */
+    /** Volta a saude pra 100 sem apagar as falhas. */
     public void reparar() {
         health = 100.0;
     }
 
-    /** Liga a máquina pra executar uma etapa. */
+    /** Liga a maquina. */
     public void ligar() {
         ligada = true;
     }
 
-    /** Desliga a máquina ao sair da etapa. */
+    /** Desliga a maquina. */
     public void desligar() {
         ligada = false;
     }
 
     /**
-     * Consulta se a máquina está ligada.
+     * Confere se a maquina esta ligada.
+     *
      * @return true enquanto estiver ligada
      */
     public boolean estaLigada() {
@@ -133,39 +140,44 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Consulta o nome cadastrado.
-     * @return nome da máquina
+     * Retorna o nome.
+     *
+     * @return nome da maquina
      */
     public String getNome() {
         return nome;
     }
 
     /**
-     * Consulta a capacidade da etapa.
-     * @return capacidade máxima cadastrada
+     * Retorna a capacidade da maquina.
+     *
+     * @return capacidade maxima guardada
      */
     public double getCapacidadeMaxima() {
         return capacidadeMaxima;
     }
 
     /**
-     * Consulta o custo de um uso da máquina.
-     * @return custo de operação
+     * Retorna o custo de usar a maquina uma vez.
+     *
+     * @return custo de operacao
      */
     public double getCustoOperacao() {
         return custoOperacao;
     }
 
     /**
-     * Consulta o desgaste restante como porcentagem de saúde.
-     * @return saúde entre zero e cem
+     * Retorna a saude da maquina.
+     *
+     * @return saude entre zero e cem
      */
     public double getHealth() {
         return health;
     }
 
     /**
-     * Consulta a chance básica configurada no cenário.
+     * Retorna a chance base de falha.
+     *
      * @return probabilidade entre zero e um
      */
     public double getProbabilidadeFalha() {
@@ -173,8 +185,8 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Sorteia uma falha usando a chance do cenário acrescida do desgaste.
-     * A chance fica limitada a 100%, e cada falha entra no histórico.
+     * Sorteia a falha considerando o desgaste e conta se falhar. A chance nao passa de 100%.
+     *
      * @return true quando o sorteio indicar falha
      */
     protected boolean verificarFalha() {
@@ -189,8 +201,7 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Aplica desgaste aleatório por uso, sem deixar a saúde abaixo de zero.
-     * No cenário Apocalíptico o limite de desgaste é mais agressivo.
+     * Sorteia o desgaste por uso, sem deixar a saude abaixo de zero.
      */
     protected void desgasteAleatorio() {
         health -= random.nextDouble() * maximoDesgaste;

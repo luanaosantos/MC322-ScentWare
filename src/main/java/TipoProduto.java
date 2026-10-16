@@ -1,31 +1,33 @@
+// Tipos de produto da fabrica.
+
 /**
- * Tipos de cosmético que a fábrica consegue produzir.
+ * Produtos q a fabrica pode fazer.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public enum TipoProduto {
-    /** Creme de mãos, com seu modelo de produção. */
+    /** Creme de maos. */
     CREME_DE_MAOS("Creme de mãos"),
-    /** Esfoliante corporal, com seu modelo de produção. */
+    /** Esfoliante corporal. */
     ESFOLIANTE("Esfoliante"),
-    /** Hidratante corporal, com seu modelo de produção. */
+    /** Hidratante corporal. */
     HIDRATANTE("Hidratante");
 
     private final String nome;
 
     /**
-     * Guarda o nome que vai aparecer nos menus e relatórios.
+     * Guarda o nome do produto pro menu.
      *
-     * @param nome nome de exibição do tipo
+     * @param nome nome no menu do tipo
      */
     TipoProduto(String nome){
         this.nome = nome;
     }
     /**
-     * Consulta o nome legível do tipo de produto.
+     * Retorna o nome.
      *
-     * @return nome de exibição do tipo
+     * @return nome no menu do tipo
      */
     public String getNome(){
         return nome;

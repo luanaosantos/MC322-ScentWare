@@ -1,5 +1,7 @@
+// Erro de falta de estoque ou budget.
+
 /**
- * Avisa quando falta estoque ou budget pra completar uma operação.
+ * Avisa q falta estoque ou budget pra operacao.
  *
  * @author Luana Oliveira e Roberta Santos
  */
@@ -7,7 +9,7 @@ public class RecursoInsuficienteException extends PlantaException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Explica qual recurso faltou e se a demanda foi cancelada.
+     * Guarda a mensagem de falta de recurso.
      *
      * @param mensagem motivo da falta de recurso
      */

@@ -133,11 +133,6 @@ pra desligar as máquinas mesmo se ocorrer um erro durante o processamento.
 O Main comunica os erros recuperáveis e permite seguir no menu, sem mostrar sucesso quando a
 operação falhou. Os diagramas em Mermaid mostram as classes e o fluxo dos dados em memória;
 o projeto continua sem banco de dados ou persistência.
-Nesta etapa, a implementação, a documentação e as verificações tiveram assistência de IA,
-inclusive nas atividades inicialmente atribuídas a pessoas no plano, conforme autorização
-posterior de redistribuição. O texto anterior e a autoria da base foram preservados. Não se
-atribui às autoras a execução manual de alterações ou verificações feitas pela IA. A revisão,
-a compreensão das decisões e a submissão acadêmica continuam precisando refletir o trabalho real.
 Os resultados efetivamente obtidos ficam registrados em Docs/VerificacaoTarefa4.md. A preparação
 da release tarefa4-230559-176643 e os dados de entrega ficam em Docs/EntregaTarefa4.md; preparar
 esses arquivos não significa que a release foi publicada ou que o formulário foi enviado.

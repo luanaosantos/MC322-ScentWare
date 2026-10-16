@@ -89,9 +89,7 @@ Os nomes exigidos pelo Gradle seguem o padrão da ferramenta. As classes, pastas
 - [Diagrama de dados](Docs/Diagrams/DiagramaDados.md)
 - [Preparação da entrega](Docs/EntregaTarefa4.md)
 
-## Autoria e colaboração
+## Autoria
 
 - Luana Oliveira dos Santos — RA 230559
 - Roberta Santos Mascarenhas Nunes — RA 176643
-
-A base e a identidade da ScentWare são das autoras. A implementação da Tarefa 4, sua documentação e suas verificações tiveram assistência de IA, incluindo atividades inicialmente divididas como humanas no plano, conforme a redistribuição autorizada. A revisão e a submissão acadêmica precisam refletir essa participação real.

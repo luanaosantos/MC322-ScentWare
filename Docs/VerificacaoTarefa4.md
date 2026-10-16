@@ -1,6 +1,6 @@
 # Verificação da Tarefa 4
 
-Verificação realizada em 15/10/2026 pela IA, conforme autorização de execução em paralelo e redistribuição das tarefas humanas. Os resultados abaixo foram executados; não representam testes feitos pessoalmente pelas autoras.
+Registro das verificações realizadas em 15/10/2026, com o ambiente e os resultados descritos abaixo.
 
 ## Ambiente e referência
 

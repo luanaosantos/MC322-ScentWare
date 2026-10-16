@@ -1,6 +1,7 @@
+// Dados comuns dos produtos da fabrica.
+
 /**
- * Reúne os dados e o risco acumulado de uma unidade de cosmético.
- * As subclasses definem o tipo e o tempo de produção de cada receita.
+ * Guarda os dados do produto. Cada subclasse define seu tipo e tempo de producao.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
@@ -16,13 +17,13 @@ public abstract class Produto implements Auditavel {
     private static int totalProdutosFabricados = 0;
 
     /**
-     * Cria uma unidade aguardando processamento, sem risco acumulado.
+     * Cria o produto aguardando processamento e sem risco acumulado.
      *
-     * @param id identificação do produto
-     * @param nome nome do cosmético
+     * @param id id do produto
+     * @param nome nome do produto
      * @param quantidadeMateriaPrimaPorUnidade consumo positivo de cada unidade
      * @param qualidade qualidade entre zero e um
-     * @throws IllegalArgumentException se faltar identificação ou houver valor fora da faixa
+     * @throws IllegalArgumentException se faltar id ou houver valor fora da faixa
      */
     public Produto(
             String id,
@@ -39,7 +40,7 @@ public abstract class Produto implements Auditavel {
         }
         this.id = id;
         this.nome = nome;
-        // Cada produto novo começa um ciclo próprio, sem reaproveitar o status de outro lote.
+        // Produto novo comeca aguardando, sem copiar o status de outro lote.
         this.status = "Aguardando";
         this.quantidadeMateriaPrimaPorUnidade = quantidadeMateriaPrimaPorUnidade;
         this.qualidade = qualidade;
@@ -47,24 +48,27 @@ public abstract class Produto implements Auditavel {
         this.lote = 0;
     }
 
-    /** Marca o início do processamento da unidade. */
+    /** Define como iniciar o processamento do produto. */
     public abstract void processar();
 
     /**
-     * Informa o tempo previsto pra receita.
-     * @return tempo de produção da unidade
+     * Retorna o tempo de producao desse produto.
+     *
+     * @return tempo de producao da unidade
      */
     public abstract double calcularTempoProducao();
 
     /**
-     * Identifica qual receita esta unidade representa.
-     * @return tipo do cosmético
+     * Retorna o tipo do produto.
+     *
+     * @return tipo do produto
      */
     public abstract TipoProduto getTipo();
 
     /**
-     * Mostra qualidade, lote e risco pra auditoria da unidade.
-     * @return diagnóstico formatado
+     * Monta o relatorio com qualidade, lote e risco do produto.
+     *
+     * @return texto do relatorio
      */
     @Override
     public String gerarRelatorioDiagnostico() {
@@ -80,8 +84,9 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Sinaliza risco alto ou rejeição na inspeção.
-     * @return true quando a unidade precisa de atenção
+     * Confere se o risco esta alto ou se o produto foi rejeitado.
+     *
+     * @return true quando a unidade precisa de atencao
      */
     @Override
     public boolean precisaManutencao() {
@@ -89,7 +94,8 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Consulta a identificação da unidade.
+     * Retorna o id.
+     *
      * @return id do produto
      */
     public String getId() {
@@ -97,15 +103,17 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Consulta o nome do cosmético.
-     * @return nome cadastrado
+     * Retorna o nome.
+     *
+     * @return nome guardado
      */
     public String getNome() {
         return nome;
     }
 
     /**
-     * Consulta a situação na linha de produção.
+     * Retorna o status atual.
+     *
      * @return status atual
      */
     public String getStatus() {
@@ -113,8 +121,9 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Registra a etapa ou o resultado da inspeção.
-     * @param status descrição não vazia do estado
+     * Atualiza o status do produto.
+     *
+     * @param status texto do status, sem ficar vazio
      * @throws IllegalArgumentException se o status estiver ausente
      */
     public void setStatus(String status) {
@@ -125,15 +134,17 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Consulta o consumo da receita por unidade.
-     * @return qtd de matéria-prima por produto
+     * Retorna quanto cada produto usa de materia-prima.
+     *
+     * @return qtd de materia-prima por produto
      */
     public double getQuantidadeMateriaPrimaPorUnidade() {
         return quantidadeMateriaPrimaPorUnidade;
     }
 
     /**
-     * Consulta a qualidade usada na inspeção.
+     * Retorna a qualidade do produto.
+     *
      * @return qualidade entre zero e um
      */
     public double getQualidade() {
@@ -141,7 +152,8 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Consulta o risco trazido das etapas anteriores.
+     * Retorna o risco acumulado do produto.
+     *
      * @return probabilidade acumulada entre zero e um
      */
     public double getProbabilidadeFalhaAcumulada() {
@@ -149,16 +161,18 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Consulta o lote da unidade.
-     * @return número do lote, ou zero antes de atribuí-lo
+     * Retorna o lote do produto.
+     *
+     * @return numero do lote, ou zero antes de atribui-lo
      */
     public int getLote() {
         return lote;
     }
 
     /**
-     * Associa a unidade a um lote da fábrica.
-     * @param lote número não negativo do lote
+     * Guarda o numero do lote.
+     *
+     * @param lote numero nao negativo do lote
      * @throws IllegalArgumentException se o lote for negativo
      */
     public void setLote(int lote) {
@@ -169,9 +183,10 @@ public abstract class Produto implements Auditavel {
     }
 
     /**
-     * Acumula o risco durante a linha, limitado a 100%.
-     * @param aumento parcela finita e não negativa de risco
-     * @throws IllegalArgumentException se o aumento for inválido
+     * Soma o risco sem passar de 100%.
+     *
+     * @param aumento parcela finita e nao negativa de risco
+     * @throws IllegalArgumentException se o aumento for invalido
      */
     public void aumentarProbabilidadeFalha(double aumento) {
         if (!Double.isFinite(aumento) || aumento < 0) {
@@ -180,13 +195,14 @@ public abstract class Produto implements Auditavel {
         probabilidadeFalhaAcumulada = Math.min(1.0, probabilidadeFalhaAcumulada + aumento);
     }
 
-    /** Registra mais uma unidade fabricada no contador geral. */
+    /** Soma um produto no contador geral. */
     protected static void incrementarTotalProdutosFabricados() {
         totalProdutosFabricados++;
     }
 
     /**
-     * Consulta o contador compartilhado pelas receitas.
+     * Retorna o total de produtos fabricados.
+     *
      * @return total de produtos fabricados
      */
     public static int getTotalProdutosFabricados() {

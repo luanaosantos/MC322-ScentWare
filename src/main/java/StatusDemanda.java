@@ -1,34 +1,36 @@
+// Estados q uma demanda pode ter.
+
 /**
- * Estados da demanda ao longo da fila e da produção.
+ * Estados usados pra acompanhar a demanda.
  *
  * @author Luana Oliveira
  * @author Roberta Santos
  */
 public enum StatusDemanda {
-    /** A demanda está na fila; só entra na linha se houver itens pendentes. */
+    /** Espera na fila; precisa ter itens pra produzir. */
     PENDENTE("Pendente"),
-    /** O lote da demanda já começou a passar pelas máquinas. */
+    /** Esta passando pelas maquinas. */
     EM_PRODUCAO("Em produção"),
-    /** Todos os itens pedidos foram aprovados e não há quantidade pendente. */
+    /** Todos os itens foram aprovados. */
     CONCLUIDA("Concluída"),
-    /** A demanda foi cancelada e não deve voltar pra fila. */
+    /** Foi cancelada e nao volta pra fila. */
     CANCELADA("Cancelada");
 
     private final String descricao;
 
     /**
-     * Guarda o texto do estado pra exibição.
+     * Guarda o texto do status.
      *
-     * @param descricao descrição legível do estado
+     * @param descricao descricao legivel do estado
      */
     StatusDemanda(String descricao) {
         this.descricao = descricao;
     }
 
     /**
-     * Consulta a descrição do estado atual.
+     * Retorna o texto do status.
      *
-     * @return descrição usada nos menus e relatórios
+     * @return descricao usada nos menus e relatorios
      */
     public String getDescricao() {
         return descricao;
