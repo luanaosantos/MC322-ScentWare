@@ -1,4 +1,7 @@
 public class MaquinaEmpacotadora extends Maquina {
+    private Motor motor;
+    private Sensor sensor;
+    private BicoEnvasador bicoEnvasador;
     public MaquinaEmpacotadora(
             String nome,
             double capacidadeMaxima,
@@ -8,6 +11,9 @@ public class MaquinaEmpacotadora extends Maquina {
             double maximoDesgaste
     ) {
         super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste);
+        this.motor = new Motor();
+        this.sensor = new Sensor();
+        this.bicoEnvasador = new BicoEnvasador();
     }
 
     @Override
