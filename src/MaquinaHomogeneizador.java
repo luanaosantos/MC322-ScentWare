@@ -1,4 +1,8 @@
 public class MaquinaHomogeneizador extends Maquina {
+    private Motor motor;
+    private Sensor sensor;
+    private ValvulaHomogeneizadora valvulaHomogeneizadora;
+
     public MaquinaHomogeneizador(
             String nome,
             double capacidadeMaxima,
@@ -8,6 +12,8 @@ public class MaquinaHomogeneizador extends Maquina {
             double maximoDesgaste
     ) {
         super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste);
+        this.motor = new Motor();
+        this.sensor = new Sensor();
     }
 
     @Override

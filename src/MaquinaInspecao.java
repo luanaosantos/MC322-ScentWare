@@ -2,6 +2,8 @@ import java.util.Random;
 
 public class MaquinaInspecao extends Maquina {
     private Random random = new Random();
+    private Motor motor;
+    private Sensor sensor;
 
     public MaquinaInspecao(
             String nome,
@@ -12,6 +14,8 @@ public class MaquinaInspecao extends Maquina {
             double maximoDesgaste
     ) {
         super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste);
+        this.motor = new Motor();
+        this.sensor = new Sensor();
     }
 
     @Override
