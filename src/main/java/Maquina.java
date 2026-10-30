@@ -163,8 +163,9 @@ public abstract class Maquina implements Auditavel {
         falhas++;
     }
 
-    /** Repara a maquina e suas partes sem apagar o total de falhas. */
+    /** Desliga e repara a maquina e suas partes sem apagar o total de falhas. */
     public void reparar() {
+        desligar();
         health = 100.0;
         motor.reparar();
         for (Sensor sensor : sensores) {
