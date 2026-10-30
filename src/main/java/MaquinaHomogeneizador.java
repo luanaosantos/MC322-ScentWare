@@ -7,6 +7,7 @@
  * @author Roberta Santos
  */
 public class MaquinaHomogeneizador extends Maquina {
+    private final ValvulaHomogeneizadora valvula;
     /**
      * Cria o homogeneizador com os valores do cenario.
      *
@@ -26,11 +27,29 @@ public class MaquinaHomogeneizador extends Maquina {
             double health,
             double maximoDesgaste
     ) {
-        super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste);
+        this(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste, 2);
     }
 
     /**
-     * Mistura o produto e soma risco se a maquina falhar.
+     * Cria o homogeneizador com a qtd de sensores escolhida.
+     *
+     * @param nome nome da maquina
+     * @param capacidadeMaxima capacidade positiva
+     * @param probabilidadeFalha chance entre 0 e 1
+     * @param custoOperacao custo de cada uso
+     * @param health saude inicial
+     * @param maximoDesgaste desgaste maximo por uso
+     * @param quantidadeSensores qtd de sensores, pelo menos um
+     * @throws IllegalArgumentException se algum valor for invalido
+     */
+    public MaquinaHomogeneizador(String nome, double capacidadeMaxima, double probabilidadeFalha,
+            double custoOperacao, double health, double maximoDesgaste, int quantidadeSensores) {
+        super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste, quantidadeSensores);
+        valvula = new ValvulaHomogeneizadora();
+    }
+
+    /**
+     * Mistura o produto e soma risco se a maquina, a valvula ou um sensor falhar.
      *
      * @param produto unidade nao nula a processar
      * @return true depois da etapa
@@ -44,9 +63,14 @@ public class MaquinaHomogeneizador extends Maquina {
         ligar();
         try {
             produto.processar();
-
-            // Falha na mistura aumenta o risco na inspecao.
-            if (verificarFalha()) {
+            boolean detectou = detectarProduto();
+            boolean abriu = valvula.abrir();
+            boolean falhou = verificarFalha();
+            if (falhou) {
+                valvula.registrarFalha();
+            }
+            // Sensor ou valvula com falha aumentam o risco do produto.
+            if (falhou || !detectou || !abriu) {
                 produto.aumentarProbabilidadeFalha(getProbabilidadeFalha());
             }
 
@@ -54,6 +78,7 @@ public class MaquinaHomogeneizador extends Maquina {
             return true;
         } finally {
             // Desliga mesmo se der erro.
+            valvula.fechar();
             desligar();
         }
     }
@@ -66,5 +91,31 @@ public class MaquinaHomogeneizador extends Maquina {
     @Override
     public String getTipo() {
         return "Homogeneizador";
+    }
+
+    /**
+     * Mostra o estado da valvula.
+     *
+     * @return texto da valvula
+     */
+    @Override
+    protected String diagnosticoParte() {
+        return valvula.diagnostico();
+    }
+
+    /**
+     * Confere se a valvula precisa de reparo.
+     *
+     * @return true se a valvula falhou
+     */
+    @Override
+    protected boolean partePrecisaReparo() {
+        return valvula.precisaReparo();
+    }
+
+    /** Repara a valvula da maquina. */
+    @Override
+    protected void repararParte() {
+        valvula.reparar();
     }
 }

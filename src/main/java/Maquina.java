@@ -1,5 +1,6 @@
 // Base das maquinas da linha de producao.
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -18,6 +19,8 @@ public abstract class Maquina implements Auditavel {
     private double maximoDesgaste;
     private int falhas;
     private Random random = new Random();
+    private final Motor motor;
+    private final ArrayList<Sensor> sensores;
 
     /**
      * Cria a maquina desligada com os valores do cenario.
@@ -38,6 +41,30 @@ public abstract class Maquina implements Auditavel {
             double health,
             double maximoDesgaste
     ) {
+        this(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste, 2);
+    }
+
+    /**
+     * Cria a maquina com a qtd de sensores escolhida.
+     *
+     * @param nome nome da maquina
+     * @param capacidadeMaxima capacidade positiva
+     * @param probabilidadeFalha chance entre 0 e 1
+     * @param custoOperacao custo de cada uso
+     * @param health saude inicial entre 0 e 100
+     * @param maximoDesgaste desgaste maximo por uso
+     * @param quantidadeSensores qtd de sensores, pelo menos um
+     * @throws IllegalArgumentException se algum valor for invalido
+     */
+    protected Maquina(
+            String nome,
+            double capacidadeMaxima,
+            double probabilidadeFalha,
+            double custoOperacao,
+            double health,
+            double maximoDesgaste,
+            int quantidadeSensores
+    ) {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("Informe o nome da máquina.");
         }
@@ -45,8 +72,8 @@ public abstract class Maquina implements Auditavel {
                 || !Double.isFinite(probabilidadeFalha) || probabilidadeFalha < 0 || probabilidadeFalha > 1
                 || !Double.isFinite(custoOperacao) || custoOperacao < 0
                 || !Double.isFinite(health) || health < 0 || health > 100
-                || !Double.isFinite(maximoDesgaste) || maximoDesgaste < 0) {
-            throw new IllegalArgumentException("Confira capacidade positiva, chance entre 0 e 1, saúde entre 0 e 100 e custo/desgaste não negativos.");
+                || !Double.isFinite(maximoDesgaste) || maximoDesgaste < 0 || quantidadeSensores < 1) {
+            throw new IllegalArgumentException("Confira capacidade positiva, chance entre 0 e 1, saúde entre 0 e 100, custo/desgaste não negativos e pelo menos um sensor.");
         }
         this.nome = nome;
         this.ligada = false;
@@ -56,6 +83,12 @@ public abstract class Maquina implements Auditavel {
         this.health = health;
         this.maximoDesgaste = maximoDesgaste;
         this.falhas = 0;
+        // Cada maquina cria suas partes pra nao compartilhar estado com outra.
+        this.motor = new Motor(health);
+        this.sensores = new ArrayList<>();
+        for (int i = 0; i < quantidadeSensores; i++) {
+            sensores.add(new Sensor());
+        }
     }
 
     /**
@@ -75,30 +108,45 @@ public abstract class Maquina implements Auditavel {
     public abstract String getTipo();
 
     /**
-     * Monta o relatorio de saude e falhas da maquina.
+     * Mostra a saude, a chance de falha e o estado das partes.
      *
      * @return texto do relatorio
      */
     @Override
     public String gerarRelatorioDiagnostico() {
-        return String.format(
-                "%s (%s) | Saúde: %.1f%% | Falhas: %d | Precisa de manutenção: %s",
+        StringBuilder relatorio = new StringBuilder(String.format(
+                "%s (%s) | Saúde: %.1f%% | Falhas: %d | Falha base: %.0f%% | Precisa de manutenção: %s",
                 nome,
                 getTipo(),
                 health,
                 falhas,
+                probabilidadeFalha * 100,
                 precisaManutencao() ? "Sim" : "Não"
-        );
+        ));
+        relatorio.append("\n  - ").append(motor.diagnostico());
+        for (int i = 0; i < sensores.size(); i++) {
+            relatorio.append("\n  - ").append(i + 1).append(". ").append(sensores.get(i).diagnostico());
+        }
+        relatorio.append("\n  - ").append(diagnosticoParte());
+        return relatorio.toString();
     }
 
     /**
-     * Confere se a saude esta abaixo de 30%.
+     * Confere a saude da maquina e se alguma parte precisa de reparo.
      *
      * @return true quando a maquina precisa de atencao
      */
     @Override
     public boolean precisaManutencao() {
-        return health < 30.0;
+        if (health < 30.0 || motor.quebrado() || partePrecisaReparo()) {
+            return true;
+        }
+        for (Sensor sensor : sensores) {
+            if (sensor.precisaReparo()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -107,7 +155,7 @@ public abstract class Maquina implements Auditavel {
      * @return true quando ha necessidade de reparo
      */
     public boolean quebrada() {
-        return health <= 0.0;
+        return health <= 0.0 || motor.quebrado();
     }
 
     /** Soma uma falha no contador. */
@@ -115,19 +163,33 @@ public abstract class Maquina implements Auditavel {
         falhas++;
     }
 
-    /** Volta a saude pra 100 sem apagar as falhas. */
+    /** Repara a maquina e suas partes sem apagar o total de falhas. */
     public void reparar() {
         health = 100.0;
+        motor.reparar();
+        for (Sensor sensor : sensores) {
+            sensor.reparar();
+        }
+        repararParte();
     }
 
-    /** Liga a maquina. */
+    /**
+     * Liga a maquina pelo motor.
+     *
+     * @throws PlantaException se o motor precisar de reparo
+     */
     public void ligar() {
+        motor.ligar();
         ligada = true;
     }
 
     /** Desliga a maquina. */
     public void desligar() {
         ligada = false;
+        motor.desligar();
+        for (Sensor sensor : sensores) {
+            sensor.limparPresenca();
+        }
     }
 
     /**
@@ -185,7 +247,7 @@ public abstract class Maquina implements Auditavel {
     }
 
     /**
-     * Sorteia a falha considerando o desgaste e conta se falhar. A chance nao passa de 100%.
+     * Sorteia a falha considerando o desgaste. Se falhar, conta e avisa um sensor.
      *
      * @return true quando o sorteio indicar falha
      */
@@ -196,17 +258,52 @@ public abstract class Maquina implements Auditavel {
 
         if (falhou) {
             contabilizarFalha();
+            sensores.get(random.nextInt(sensores.size())).registrarFalha();
         }
         return falhou;
     }
 
     /**
-     * Sorteia o desgaste por uso, sem deixar a saude abaixo de zero.
+     * Sorteia o desgaste da maquina e do motor, sem deixar a saude abaixo de zero.
      */
     protected void desgasteAleatorio() {
-        health -= random.nextDouble() * maximoDesgaste;
+        double desgaste = random.nextDouble() * maximoDesgaste;
+        health -= desgaste;
+        motor.desgastar(desgaste);
         if (health < 0.0) {
             health = 0.0;
         }
     }
+
+    /**
+     * Pede a leitura a todos os sensores da maquina.
+     *
+     * @return true se todos detectaram o produto
+     */
+    protected boolean detectarProduto() {
+        boolean detectado = true;
+        for (Sensor sensor : sensores) {
+            if (!sensor.detectarPresenca()) {
+                detectado = false;
+            }
+        }
+        return detectado;
+    }
+
+    /**
+     * Pede o diagnostico da parte especifica da etapa.
+     *
+     * @return texto da parte
+     */
+    protected abstract String diagnosticoParte();
+
+    /**
+     * Confere a condicao da parte especifica.
+     *
+     * @return true se precisa de reparo
+     */
+    protected abstract boolean partePrecisaReparo();
+
+    /** Repara a parte especifica da etapa. */
+    protected abstract void repararParte();
 }

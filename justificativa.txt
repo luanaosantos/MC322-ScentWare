@@ -136,3 +136,30 @@ o projeto continua sem banco de dados ou persistência.
 Os resultados efetivamente obtidos ficam registrados em Docs/VerificacaoTarefa4.md. A preparação
 da release tarefa4-230559-176643 e os dados de entrega ficam em Docs/EntregaTarefa4.md; preparar
 esses arquivos não significa que a release foi publicada ou que o formulário foi enviado.
+
+
+EVOLUÇÃO DA SCENTWARE NA TAREFA 5
+Na quinta tarefa, criamos a classe LinhaDeProducao para reunir as máquinas na ordem em que
+elas participam da fabricação. O GerenciadorProducao continua cuidando das demandas, do
+estoque e do budget, mas agora utiliza essa linha para organizar o processamento.
+As máquinas são criadas antes de serem adicionadas à linha e podem existir fora dela.
+Por isso, representamos essa relação como agregação. Já as partes internas são criadas
+pelas próprias máquinas e pertencem a elas, formando relações de composição.
+Cada máquina passou a ter seu próprio motor e seus sensores. O homogeneizador também
+possui uma válvula, a empacotadora tem um bico envasador e a inspeção possui um atuador de
+descarte. Escolhemos essas partes porque elas fazem sentido nas etapas da nossa fábrica:
+a válvula controla a passagem da mistura, o bico participa do envase e o atuador separa os
+produtos rejeitados. Assim, cada máquina possui três tipos de componentes, incluindo uma
+relação com um motor e outra com vários sensores.
+Essas partes também participam do funcionamento da máquina. Uma falha em um sensor, na
+válvula ou no bico pode aumentar o risco do produto. Na inspeção, uma falha no atuador impede
+a separação segura e o produto é rejeitado. O reparo da máquina também recupera suas partes.
+As referências desses componentes ficam dentro das máquinas; o menu e o gerenciador pedem
+as operações à própria máquina, sem precisar acessar suas partes diretamente. A lista de
+máquinas devolvida pela linha também é protegida contra alterações externas.
+A auditoria agora mostra a linha de produção, suas máquinas e os componentes de cada uma,
+com os níveis separados por indentação. No menu de auditoria, acrescentamos opções para
+consultar essa estrutura e reparar as máquinas da linha. Também incluímos o diagrama UML
+em PNG e sua versão editável em Mermaid, mostrando as relações e as cardinalidades.
+Mantivemos os produtos, as demandas, as estratégias, os cenários e os recursos das tarefas
+anteriores, acrescentando essa organização à fábrica que já tínhamos desenvolvido.

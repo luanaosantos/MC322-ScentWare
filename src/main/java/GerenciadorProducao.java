@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class GerenciadorProducao {
     private ArrayList<Demanda> demandas;
     private ArrayList<Produto> produtosFabricados;
-    private ArrayList<Maquina> maquinas;
+    private LinhaDeProducao linha;
     private ArrayList<Produto> produtosModelos;
     private MateriaPrima materiaPrima;
     private double budget;
@@ -52,7 +52,7 @@ public class GerenciadorProducao {
         this.budget = budget;
         this.demandas = new ArrayList<>();
         this.produtosFabricados = new ArrayList<>();
-        this.maquinas = new ArrayList<>();
+        this.linha = new LinhaDeProducao("ScentWare");
         this.produtosModelos = new ArrayList<>(produtosModelos);
         this.estrategiaAtual = estrategiaAtual;
         this.riscoInicialProduto = riscoInicialProduto;
@@ -120,13 +120,13 @@ public class GerenciadorProducao {
      * @throws PlantaException se ja houver demandas com custo calculado pra essa linha
      */
     public void adicionarMaquina(Maquina maquina) {
-        if (maquina == null || maquinas.contains(maquina)) {
+        if (maquina == null || linha.contemMaquina(maquina)) {
             throw new IllegalArgumentException("Informe uma máquina válida que ainda não esteja na linha.");
         }
         if (!demandas.isEmpty()) {
             throw new PlantaException("Configure as máquinas antes de registrar as demandas.");
         }
-        maquinas.add(maquina);
+        linha.adicionarMaquina(maquina);
     }
 
     /**
@@ -223,7 +223,7 @@ public class GerenciadorProducao {
         if (demanda.getStatus() != StatusDemanda.PENDENTE || demanda.getQuantidadeProdutos() <= 0) {
             throw new DemandaInvalidaException("Só uma demanda pendente com qtd positiva pode entrar na produção.");
         }
-        if (maquinas.isEmpty() || !(maquinas.get(maquinas.size() - 1) instanceof MaquinaInspecao)) {
+        if (!linha.prontaParaProducao()) {
             throw new IllegalArgumentException("A linha precisa de máquinas e terminar na inspeção.");
         }
 
@@ -275,27 +275,10 @@ public class GerenciadorProducao {
 
         for (Produto produto : produtosLote) {
             Produto.incrementarTotalProdutosFabricados();
-
-            boolean aprovado = true;
-
-            for (Maquina maquina : maquinas) {
-                // Se quebrou, repara antes de continuar.
-                if (maquina.quebrada()) {
-                    System.out.println("\n[AVISO] - Produção interrompida!");
-                    System.out.println("[AVISO] - A máquina " + maquina.getNome() + " está quebrada.");
-                    maquina.reparar();
-                    System.out.println("[AVISO] - Máquina reparada. Produção retomada.");
-                }
-
-                // Evita saldo negativo por arredondamento.
-                budget = Math.max(0.0, budget - maquina.getCustoOperacao());
-                if (!maquina.processar(produto)) {
-                    aprovado = false;
-                    break;
-                }
-            }
-
-            if (aprovado) {
+            // A linha processa o produto; o gerenciador cuida do budget.
+            double custoUsado = linha.processarProduto(produto);
+            budget = Math.max(0.0, budget - custoUsado);
+            if (!"Rejeitado".equals(produto.getStatus())) {
                 produtosFabricados.add(produto);
                 produtosAprovados++;
             }
@@ -353,10 +336,7 @@ public class GerenciadorProducao {
         if (quantidadeProdutos < 0) {
             throw new IllegalArgumentException("A quantidade de produtos não pode ser negativa.");
         }
-        double custoPorProduto = 0;
-        for (Maquina maquina : maquinas) {
-            custoPorProduto += maquina.getCustoOperacao();
-        }
+        double custoPorProduto = linha.getCustoPorProduto();
         double custo = custoPorProduto * quantidadeProdutos;
         if (!Double.isFinite(custoPorProduto) || !Double.isFinite(custo)) {
             throw new IllegalArgumentException("O custo calculado passou do limite permitido.");
@@ -402,7 +382,9 @@ public class GerenciadorProducao {
     public void gerarAuditoriaGeral() {
         System.out.println("\n=== AUDITORIA GERAL ===");
         ArrayList<Auditavel> itensAuditaveis = new ArrayList<>();
-        itensAuditaveis.addAll(maquinas);
+        if (!linha.getMaquinas().isEmpty()) {
+            itensAuditaveis.add(linha);
+        }
         itensAuditaveis.addAll(produtosFabricados);
 
         if (itensAuditaveis.isEmpty()) {
@@ -432,12 +414,21 @@ public class GerenciadorProducao {
     /** Mostra saude, falhas e manutencao das maquinas. */
     public void detalharMaquinas() {
         System.out.println("\n[MÁQUINAS]");
-        for (Maquina maquina : maquinas) {
-            System.out.println(
-                    maquina.gerarRelatorioDiagnostico()
-                    + " | Falha base: " + String.format("%.0f%%", maquina.getProbabilidadeFalha() * 100)
-            );
+        for (Maquina maquina : linha.getMaquinas()) {
+            System.out.println(maquina.gerarRelatorioDiagnostico());
         }
+    }
+
+    /** Mostra a linha com as maquinas e suas partes. */
+    public void exibirLinha() {
+        System.out.println("\n=== LINHA DE PRODUÇÃO ===");
+        System.out.println(linha.gerarRelatorioDiagnostico());
+    }
+
+    /** Repara as maquinas e suas partes pela linha. */
+    public void repararLinha() {
+        linha.repararMaquinas();
+        System.out.println("Máquinas e componentes da linha reparados.");
     }
 
     /** Mostra os produtos guardados e os dados dos lotes. */

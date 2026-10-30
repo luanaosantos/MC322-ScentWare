@@ -1,0 +1,97 @@
+classDiagram
+    direction TB
+
+    class Auditavel {
+        <<interface>>
+        +gerarRelatorioDiagnostico() String
+        +precisaManutencao() boolean
+    }
+    class GerenciadorProducao {
+        -LinhaDeProducao linha
+        +adicionarMaquina(Maquina maquina) void
+        +fabricarDemanda(Demanda demanda, Produto produto) boolean
+        +gerarAuditoriaGeral() void
+        +exibirLinha() void
+        +repararLinha() void
+    }
+    class LinhaDeProducao {
+        -String nome
+        -ArrayList~Maquina~ maquinas
+        +adicionarMaquina(Maquina maquina) void
+        +getMaquinas() List~Maquina~
+        +prontaParaProducao() boolean
+        +processarProduto(Produto produto) double
+        +repararMaquinas() void
+        +gerarRelatorioDiagnostico() String
+    }
+    class Maquina {
+        <<abstract>>
+        -Motor motor
+        -ArrayList~Sensor~ sensores
+        -double health
+        -int falhas
+        +processar(Produto produto) boolean*
+        +reparar() void
+        +gerarRelatorioDiagnostico() String
+        #detectarProduto() boolean
+    }
+    class MaquinaHomogeneizador {
+        -ValvulaHomogeneizadora valvula
+        +processar(Produto produto) boolean
+    }
+    class MaquinaEmpacotadora {
+        -BicoEnvasador bicoEnvasador
+        +processar(Produto produto) boolean
+    }
+    class MaquinaInspecao {
+        -AtuadorDescarte atuador
+        +processar(Produto produto) boolean
+    }
+    class Motor {
+        -boolean ligado
+        -double saude
+        ~ligar() void
+        ~reparar() void
+        ~diagnostico() String
+    }
+    class Sensor {
+        -boolean presencaDetectada
+        -boolean funcionando
+        ~detectarPresenca() boolean
+        ~registrarFalha() void
+        ~diagnostico() String
+    }
+    class ValvulaHomogeneizadora {
+        -double pressaoAtual
+        -boolean funcionando
+        ~abrir() boolean
+        ~reparar() void
+        ~diagnostico() String
+    }
+    class BicoEnvasador {
+        -boolean aberto
+        -boolean funcionando
+        ~abrirBicoEnvasador() boolean
+        ~reparar() void
+        ~diagnostico() String
+    }
+    class AtuadorDescarte {
+        -boolean funcionando
+        -int descartados
+        ~encaminhar(boolean rejeitado) boolean
+        ~reparar() void
+        ~diagnostico() String
+    }
+
+    Auditavel <|.. LinhaDeProducao
+    Auditavel <|.. Maquina
+    GerenciadorProducao "1" *-- "1" LinhaDeProducao : cria e controla
+    LinhaDeProducao "0..*" o-- "0..*" Maquina : agrupa em ordem
+    Maquina "1" *-- "1" Motor : possui
+    Maquina "1" *-- "1..*" Sensor : possui
+    Maquina <|-- MaquinaHomogeneizador
+    Maquina <|-- MaquinaEmpacotadora
+    Maquina <|-- MaquinaInspecao
+    MaquinaHomogeneizador "1" *-- "1" ValvulaHomogeneizadora : possui
+    MaquinaEmpacotadora "1" *-- "1" BicoEnvasador : possui
+    MaquinaInspecao "1" *-- "1" AtuadorDescarte : possui

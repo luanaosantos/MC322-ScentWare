@@ -115,6 +115,11 @@ public class Main {
                     )
             );
 
+            // As demandas comecam vazias e podem ser atualizadas pelo menu.
+            gerenciador.registrarDemanda(new Demanda(hidratante.getTipo(), 0, 0));
+            gerenciador.registrarDemanda(new Demanda(cremeDeMaos.getTipo(), 0, 0));
+            gerenciador.registrarDemanda(new Demanda(esfoliante.getTipo(), 0, 0));
+
             int opcao;
             int opcaoSecundaria;
             int opcao3;
@@ -233,7 +238,7 @@ public class Main {
                         case 6:
                                 subMenuAuditoria();
                                 System.out.print("Escolha uma opcao: ");
-                                opcaoSecundaria = lerInteiroEntre(scanner, 0, 3);
+                                opcaoSecundaria = lerInteiroEntre(scanner, 0, 5);
                                 switch(opcaoSecundaria){
                                     case 1:
                                         gerenciador.gerarAuditoriaGeral();
@@ -243,6 +248,12 @@ public class Main {
                                         break;
                                     case 3:
                                         gerenciador.detalharProdutos();
+                                        break;
+                                    case 4:
+                                        gerenciador.exibirLinha();
+                                        break;
+                                    case 5:
+                                        gerenciador.repararLinha();
                                         break;
                                     case 0:
                                         break;
@@ -375,6 +386,8 @@ public class Main {
         System.out.println("     [ 1 ] - Relatório geral");
         System.out.println("     [ 2 ] - Detalhar máquinas");
         System.out.println("     [ 3 ] - Detalhar produtos");
+        System.out.println("     [ 4 ] - Ver linha de produção");
+        System.out.println("     [ 5 ] - Reparar máquinas da linha");
         System.out.println("     [ 0 ] - Voltar");
     }
     /**
