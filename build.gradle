@@ -34,4 +34,6 @@ tasks.named('javadoc', Javadoc) {
     options.charSet = 'UTF-8'
     options.docEncoding = 'UTF-8'
     options.author = true
+    // Mostra tb os metodos das partes, q so sao usados no projeto.
+    options.memberLevel = JavadocMemberLevel.PACKAGE
 }

@@ -7,6 +7,7 @@
  * @author Roberta Santos
  */
 public class MaquinaEmpacotadora extends Maquina {
+    private final BicoEnvasador bicoEnvasador;
     /**
      * Cria a empacotadora com os valores do cenario.
      *
@@ -26,11 +27,29 @@ public class MaquinaEmpacotadora extends Maquina {
             double health,
             double maximoDesgaste
     ) {
-        super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste);
+        this(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste, 2);
     }
 
     /**
-     * Embala o produto e soma risco se a maquina falhar.
+     * Cria a empacotadora com a qtd de sensores escolhida.
+     *
+     * @param nome nome da maquina
+     * @param capacidadeMaxima capacidade positiva
+     * @param probabilidadeFalha chance entre 0 e 1
+     * @param custoOperacao custo de cada uso
+     * @param health saude inicial
+     * @param maximoDesgaste desgaste maximo por uso
+     * @param quantidadeSensores qtd de sensores, pelo menos um
+     * @throws IllegalArgumentException se algum valor for invalido
+     */
+    public MaquinaEmpacotadora(String nome, double capacidadeMaxima, double probabilidadeFalha,
+            double custoOperacao, double health, double maximoDesgaste, int quantidadeSensores) {
+        super(nome, capacidadeMaxima, probabilidadeFalha, custoOperacao, health, maximoDesgaste, quantidadeSensores);
+        bicoEnvasador = new BicoEnvasador();
+    }
+
+    /**
+     * Embala o produto e soma risco se a maquina, o bico ou um sensor falhar.
      *
      * @param produto unidade nao nula a processar
      * @return true depois da etapa
@@ -43,14 +62,21 @@ public class MaquinaEmpacotadora extends Maquina {
         }
         ligar();
         try {
-            // Falha na embalagem tb aumenta o risco na inspecao.
-            if (verificarFalha()) {
+            boolean detectou = detectarProduto();
+            boolean abriu = bicoEnvasador.abrirBicoEnvasador();
+            boolean falhou = verificarFalha();
+            if (falhou) {
+                bicoEnvasador.registrarFalha();
+            }
+            // Sensor ou bico com falha aumentam o risco na inspecao.
+            if (falhou || !detectou || !abriu) {
                 produto.aumentarProbabilidadeFalha(getProbabilidadeFalha());
             }
             desgasteAleatorio();
             return true;
         } finally {
             // Desliga mesmo se der erro.
+            bicoEnvasador.fechar();
             desligar();
         }
     }
@@ -63,5 +89,31 @@ public class MaquinaEmpacotadora extends Maquina {
     @Override
     public String getTipo() {
         return "Empacotadora";
+    }
+
+    /**
+     * Mostra o estado do bico.
+     *
+     * @return texto do bico
+     */
+    @Override
+    protected String diagnosticoParte() {
+        return bicoEnvasador.diagnostico();
+    }
+
+    /**
+     * Confere se o bico precisa de reparo.
+     *
+     * @return true se o bico falhou
+     */
+    @Override
+    protected boolean partePrecisaReparo() {
+        return bicoEnvasador.precisaReparo();
+    }
+
+    /** Repara o bico da maquina. */
+    @Override
+    protected void repararParte() {
+        bicoEnvasador.reparar();
     }
 }
