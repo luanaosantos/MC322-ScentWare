@@ -112,7 +112,7 @@ Os fontes ficam em `src/main/java/br/unicamp/ic/mc322/`:
 - `persistence`: entrada principal de salvamento e carregamento.
 - `exception`: erros de negócio e persistência.
 
-Os testes acompanham os pacotes em `src/test/java/br/unicamp/ic/mc322/`. O [plano da tarefa](Docs/Plans/PlanoTarefa6.md) registra as decisões; a [verificação](Docs/VerificacaoTarefa6.md) registra os comandos e resultados.
+Os testes acompanham os pacotes em `src/test/java/br/unicamp/ic/mc322/`.
 
 A persistência está dividida por responsabilidade:
 
