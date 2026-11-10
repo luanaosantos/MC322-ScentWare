@@ -5,3 +5,6 @@ build/
 .vscode/
 Thumbs.db
 Desktop.ini
+
+# Estado salvo pelo menu.
+dados/

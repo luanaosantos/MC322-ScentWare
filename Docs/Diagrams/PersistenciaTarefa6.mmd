@@ -1,0 +1,26 @@
+flowchart TB
+    Menu[Main]
+    Principal[PersistenciaPlanta]
+    Arquivo["dados/planta.xml"]
+    subgraph Conversores["persistence/conversores"]
+        Planta[PlantaXml]
+        Estoque[MateriaPrimaXml]
+        Demandas[DemandaXml]
+        Produtos[ProdutoXml]
+        Maquinas[MaquinaXml]
+        Estrategia[EstrategiaXml]
+    end
+    subgraph Apoio["persistence/xml"]
+        Documento[DocumentoXml]
+        Elementos[ElementosXml]
+    end
+    Menu -->|salvar e carregar| Principal
+    Principal -->|montar e recuperar fabrica| Planta
+    Principal -->|ler e gravar documento| Documento
+    Documento <-->|XML| Arquivo
+    Planta --> Estoque
+    Planta --> Demandas
+    Planta --> Produtos
+    Planta --> Maquinas
+    Planta --> Estrategia
+    Planta -->|consultas e validacoes comuns| Elementos

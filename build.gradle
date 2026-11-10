@@ -13,7 +13,7 @@ java {
 
 // O programa comeca no Main.
 application {
-    mainClass = 'Main'
+    mainClass = 'br.unicamp.ic.mc322.Main'
 }
 
 // Compila em UTF-8 pra Java 17.
@@ -36,4 +36,22 @@ tasks.named('javadoc', Javadoc) {
     options.author = true
     // Mostra tb os metodos das partes, q so sao usados no projeto.
     options.memberLevel = JavadocMemberLevel.PACKAGE
+}
+
+// JUnit 5 roda junto do build, sem abrir o menu.
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
 }
