@@ -163,3 +163,21 @@ consultar essa estrutura e reparar as máquinas da linha. Também incluímos o d
 em PNG e sua versão editável em Mermaid, mostrando as relações e as cardinalidades.
 Mantivemos os produtos, as demandas, as estratégias, os cenários e os recursos das tarefas
 anteriores, acrescentando essa organização à fábrica que já tínhamos desenvolvido.
+
+
+EVOLUÇÃO DA SCENTWARE NA TAREFA 6
+Na sexta tarefa, acrescentamos a persistência em XML para que o estado da fábrica possa
+ser recuperado depois de encerrar o programa. Salvamos o estoque de óleo de amêndoas, as
+máquinas com seus componentes e as demandas com seus respectivos estados. Também escolhemos
+guardar orçamento, produtos aprovados, estratégia, cenário e contadores, para continuar a
+operação sem perder essas informações.
+Separamos a leitura e a escrita dos arquivos das regras de produção. No carregamento, os dados
+são validados antes de substituir a fábrica em uso, e cada máquina recupera seus próprios
+componentes. Se ocorrer algum erro, o sistema apresenta um aviso e mantém o estado anterior.Sem
+arquivo salvo, a aplicação começa com os dados do cenário escolhido.
+Também organizamos as classes em pacotes e criamos testes automatizados com JUnit 5, executados
+pelo Gradle. Os testes verificam regras de negócio, produção, recuperação dos dados e situações
+inválidas. Os arquivos usados nos testes ficam em diretórios temporários, separados dos dados
+reais da aplicação.
+Mantivemos as funcionalidades anteriores e atualizamos o README para explicar a execução, os dados
+persistidos, as limitações e os grupos de testes.
